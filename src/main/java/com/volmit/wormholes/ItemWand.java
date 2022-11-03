@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
@@ -40,23 +41,23 @@ public class ItemWand extends Item {
         BlockPos pos = pContext.getClickedPos();
 
         if(pContext.getLevel().getBlockState(pos).getBlock().equals(Content.Blocks.FRAME.get())) {
-            Cuboid c = new Framer(pContext.getLevel(), pos).validate();
+            Framer f = new Framer(pContext.getLevel(), pos);
+            Cuboid c = f.validate();
             BlockPos playerPos = pContext.getPlayer().blockPosition();
 
             if(c != null) {
                 if(hasData(pContext.getItemInHand())) {
-
-                    pContext.getPlayer().sendMessage(new TextComponent("Already Frame Set, linking with existing and new"), pContext.getPlayer().getUUID());
                     if(PortalUtil.linkPortals(pContext.getPlayer(), (ServerLevel) pContext.getLevel(), getDirection(pContext.getItemInHand()), getDimension(pContext.getItemInHand()),
-                        getCuboid(pContext.getItemInHand()), computeDirection(playerPos, c.getCenter()), pContext.getLevel().dimension().location().toString(), c)) {
+                        getCuboid(pContext.getItemInHand()), computeDirection(playerPos, c.getCenter()), pContext.getLevel().dimension().location().toString(), c.clone())) {
+                        clear(pContext.getItemInHand());
                         pContext.getItemInHand().setDamageValue(pContext.getItemInHand().getDamageValue() + 1);
+                        return super.useOn(pContext);
                     }
                 }
 
                 setCuboid(pContext.getItemInHand(), c);
                 setDimension(pContext.getItemInHand(), pContext.getLevel().dimension().location().toString());
                 setDirection(pContext.getItemInHand(), computeDirection(playerPos, c.getCenter()));
-                pContext.getPlayer().sendMessage(new TextComponent("Frame Set"), pContext.getPlayer().getUUID());
             }
         }
 
@@ -126,8 +127,7 @@ public class ItemWand extends Item {
         });
     }
 
-    public Cuboid getCuboid(ItemStack item)
-    {
+    public Cuboid getCuboid(ItemStack item) {
         try {
             int[] f = item.getTag().getIntArray("wormholesframe");
             return new Cuboid(f[0],f[1], f[2], f[3], f[4], f[5]);

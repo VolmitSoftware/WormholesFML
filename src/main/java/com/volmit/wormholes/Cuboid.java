@@ -19,6 +19,7 @@
 package com.volmit.wormholes;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 
@@ -33,6 +34,11 @@ import java.util.*;
 public class Cuboid {
     protected int x1, y1, z1;
     protected int x2, y2, z2;
+
+    public AABB aabb()
+    {
+        return new AABB(x1, y1, z1, x2, y2, z2);
+    }
 
     /**
      * Construct a Cuboid given two Location objects which represent any two corners
@@ -443,8 +449,23 @@ public class Cuboid {
         return new Cuboid(this);
     }
 
-    public AABB insetAABB() {
-        return new AABB(x1, y1, z1, x2, y2, z2);
+    public Cuboid insetPortal(ServerLevel level) {
+        if(getSizeX() > 1 && getSizeZ() > 1)
+        {
+            return new Cuboid(x1 + 1, y1, z1 + 1, x2, y2, z2);
+        }
+
+        if(getSizeX() > 1 && getSizeY() > 1)
+        {
+            return new Cuboid(x1 + 1, y1 + 1, z1, x2, y2, z2);
+        }
+
+        if(getSizeZ() > 1 && getSizeY() > 1)
+        {
+            return new Cuboid(x1, y1 + 1, z1+1, x2, y2, z2);
+        }
+
+        return this;
     }
 
     public enum CuboidDirection {
