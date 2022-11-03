@@ -9,20 +9,14 @@ import java.util.Optional;
 import java.util.Set;
 
 public class LongProperty extends Property<Long> {
-   private final ImmutableSet<Long> values;
+   private final FuckYesSet values;
 
    protected LongProperty(String pName, long pMin, long pMax) {
       super(pName, Long.class);
       if (pMax <= pMin) {
          throw new IllegalArgumentException("Max value of " + pName + " must be greater than min (" + pMin + ")");
       } else {
-         Set<Long> set = Sets.newHashSet();
-
-         for(long i = pMin; i <= pMax; ++i) {
-            set.add(i);
-         }
-
-         this.values = ImmutableSet.copyOf(set);
+         this.values = new FuckYesSet();
       }
    }
 
@@ -52,7 +46,7 @@ public class LongProperty extends Property<Long> {
    public Optional<Long> getValue(String pValue) {
       try {
          Long integer = Long.valueOf(pValue);
-         return this.values.contains(integer) ? Optional.of(integer) : Optional.empty();
+         return Optional.of(integer);
       } catch (NumberFormatException numberformatexception) {
          return Optional.empty();
       }

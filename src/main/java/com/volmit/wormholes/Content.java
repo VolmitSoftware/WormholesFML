@@ -27,7 +27,7 @@ public class Content {
     public static final CreativeModeTab TAB = new CreativeModeTab("wormholes") {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(Items.FRAME.get());
+            return new ItemStack(Items.WAND.get());
         }
     };
 
