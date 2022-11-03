@@ -20,6 +20,7 @@ package com.volmit.wormholes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.AABB;
 
 import java.awt.Dimension;
 import java.util.*;
@@ -47,6 +48,22 @@ public class Cuboid {
         x2 = Math.max(l1.getX(), l2.getX());
         y2 = Math.max(l1.getY(), l2.getY());
         z2 = Math.max(l1.getZ(), l2.getZ());
+    }
+
+    public List<BlockPos> getBlockPositions()
+    {
+        List<BlockPos> positions = new ArrayList<>();
+        for(int x = x1; x <= x2; x++)
+        {
+            for(int y = y1; y <= y2; y++)
+            {
+                for(int z = z1; z <= z2; z++)
+                {
+                    positions.add(new BlockPos(x, y, z));
+                }
+            }
+        }
+        return positions;
     }
 
     /**
@@ -247,13 +264,13 @@ public class Cuboid {
      */
     public Cuboid expand(CuboidDirection dir, int amount) {
         switch (dir) {
-            case North:
-                return new Cuboid(x1 - amount, y1, z1, x2, y2, z2);
-            case South:
-                return new Cuboid(x1, y1, z1, x2 + amount, y2, z2);
-            case East:
-                return new Cuboid(x1, y1, z1 - amount, x2, y2, z2);
             case West:
+                return new Cuboid(x1 - amount, y1, z1, x2, y2, z2);
+            case East:
+                return new Cuboid(x1, y1, z1, x2 + amount, y2, z2);
+            case North:
+                return new Cuboid(x1, y1, z1 - amount, x2, y2, z2);
+            case South:
                 return new Cuboid(x1, y1, z1, x2, y2, z2 + amount);
             case Down:
                 return new Cuboid(x1, y1 - amount, z1, x2, y2, z2);
@@ -368,13 +385,13 @@ public class Cuboid {
                 return new Cuboid(x1, y1, z1, x2, y1, z2);
             case Up:
                 return new Cuboid(x1, y2, z1, x2, y2, z2);
-            case North:
-                return new Cuboid(x1, y1, z1, x1, y2, z2);
-            case South:
-                return new Cuboid(x2, y1, z1, x2, y2, z2);
-            case East:
-                return new Cuboid(x1, y1, z1, x2, y2, z1);
             case West:
+                return new Cuboid(x1, y1, z1, x1, y2, z2);
+            case East:
+                return new Cuboid(x2, y1, z1, x2, y2, z2);
+            case North:
+                return new Cuboid(x1, y1, z1, x2, y2, z1);
+            case South:
                 return new Cuboid(x1, y1, z2, x2, y2, z2);
             default:
                 throw new IllegalArgumentException("Invalid direction " + dir);
@@ -422,9 +439,12 @@ public class Cuboid {
      *
      * @see java.lang.Object#clone()
      */
-    @Override
-    public Cuboid clone() throws CloneNotSupportedException {
+    public Cuboid clone() {
         return new Cuboid(this);
+    }
+
+    public AABB insetAABB() {
+        return new AABB(x1, y1, z1, x2, y2, z2);
     }
 
     public enum CuboidDirection {

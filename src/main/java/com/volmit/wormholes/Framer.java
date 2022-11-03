@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 
@@ -16,7 +17,6 @@ import java.util.Set;
 
 public class Framer {
     private Set<BlockPos> positionsFound = new HashSet<>();
-    private Set<BlockPos> positionsChecked = new HashSet<>();
     private BlockPos cursor;
     private Level level;
     private boolean done = false;
@@ -35,102 +35,100 @@ public class Framer {
         new BlockPos(0, 0, -1)
     );
 
-    public Framer tick(int amt) {
-        for(int i = 0; i < amt; i++) {
-            if(done) {
-                return this;
-            }
-
-            tick();
-        }
-
-        return this;
-    }
-
     public Cuboid validate() {
+        tick(cursor, 128);
+
         if(!done) {
             return null;
         }
 
-        Comparator<BlockPos> comp = (a, b) -> {
-            if(a.getX() < b.getX()) {
-                return -1;
-            }
+        BlockPos min = new BlockPos(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        BlockPos max = new BlockPos(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
 
-            if(a.getX() > b.getX()) {
-                return 1;
-            }
+        for(BlockPos i : positionsFound) {
+            max = new BlockPos(Math.max(max.getX(), i.getX()), Math.max(max.getY(), i.getY()), Math.max(max.getZ(), i.getZ()));
+            min = new BlockPos(Math.min(min.getX(), i.getX()), Math.min(min.getY(), i.getY()), Math.min(min.getZ(), i.getZ()));
+        }
 
-            if(a.getY() < b.getY()) {
-                return -1;
-            }
-
-            if(a.getY() > b.getY()) {
-                return 1;
-            }
-
-            if(a.getZ() < b.getZ()) {
-                return -1;
-            }
-
-            if(a.getZ() > b.getZ()) {
-                return 1;
-            }
-
-            return 0;
+        Cuboid c = new Cuboid(min, max);
+        Cuboid n = c.getFace(Cuboid.CuboidDirection.North);
+        Cuboid e = c.getFace(Cuboid.CuboidDirection.East);
+        Cuboid w = c.getFace(Cuboid.CuboidDirection.West);
+        Cuboid s = c.getFace(Cuboid.CuboidDirection.South);
+        Cuboid u = c.getFace(Cuboid.CuboidDirection.Up);
+        Cuboid d = c.getFace(Cuboid.CuboidDirection.Down);
+        boolean[] valids = {
+            isValid(n, "North"),
+            isValid(e, "East"),
+            isValid(w, "West"),
+            isValid(s, "South"),
+            isValid(u, "Up"),
+            isValid(d, "Down")
         };
 
-        BlockPos min = positionsFound.stream().min(comp).orElse(null);
-        BlockPos max = positionsFound.stream().max(comp).orElse(null);
-        Cuboid c = new Cuboid(min, max);
-       return (isValid(c.getFace(Cuboid.CuboidDirection.North))
-           && isValid(c.getFace(Cuboid.CuboidDirection.South))
-           && isValid(c.getFace(Cuboid.CuboidDirection.East))
-           && isValid(c.getFace(Cuboid.CuboidDirection.West))) ||
-           (isValid(c.getFace(Cuboid.CuboidDirection.North))
-               && isValid(c.getFace(Cuboid.CuboidDirection.South))
-               && isValid(c.getFace(Cuboid.CuboidDirection.Up))
-               && isValid(c.getFace(Cuboid.CuboidDirection.Down))) ||
-           (isValid(c.getFace(Cuboid.CuboidDirection.Up))
-               && isValid(c.getFace(Cuboid.CuboidDirection.Down))
-               && isValid(c.getFace(Cuboid.CuboidDirection.East))
-               && isValid(c.getFace(Cuboid.CuboidDirection.West))) ? c : null;
+       return (c.volume() >= 9 && ((
+           valids[0] &&
+              valids[1]&&
+                valids[2]&&
+                    valids[3]
+           ) ||
+           (valids[0] &&
+               valids[3]&&
+               valids[4]&&
+               valids[5])||
+           (valids[1] &&
+               valids[2]&&
+               valids[4]&&
+               valids[5]))) ? c : null;
     }
 
-    private boolean isValid(Cuboid frame) {
-        for(int i = frame.getLowerNE().getX(); i <= frame.getUpperSW().getX(); i++) {
-            for(int j = frame.getLowerNE().getY(); j <= frame.getUpperSW().getY(); j++) {
-                for(int k = frame.getLowerNE().getZ(); k <= frame.getUpperSW().getZ(); k++) {
-                    if(!positionsFound.contains(new BlockPos(i, j, k))) {
-                        return false;
-                    }
-                }
+    private void setIndicatorBlock(Cuboid c, Block type) {
+        for(BlockPos i : c.getBlockPositions()) {
+            level.setBlockAndUpdate(i, type.defaultBlockState());
+        }
+    }
+
+    private boolean isValid(Cuboid frame, String a) {
+        if(
+            Math.max(frame.getSizeX(), Math.max(frame.getSizeY(), frame.getSizeZ())) != frame.volume()
+        ) {
+            System.out.println("Invalid size on " + a + " " + frame.getSizeX() + " " + frame.getSizeY() + " " + frame.getSizeZ());
+            return false;
+        }
+
+        for(BlockPos i : frame.getBlockPositions()) {
+            if(!positionsFound.contains(i)) {
+                System.out.println("NOT IN POSITIONS " + a);
+                return false;
+            }
+
+            if(!level.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
+                System.out.println("NOT FRAME " + a);
+                return false;
             }
         }
 
         return true;
     }
 
-    public void tick() {
-        if(done) {
+    public void tick(BlockPos p, int max) {
+        if(done || max <= 0) {
             return;
         }
 
-        int checked = positionsChecked.size();
+        int checked = positionsFound.size();
 
         for(BlockPos i : check) {
-            BlockPos o = cursor.offset(i);
-            if(!positionsChecked.contains(o)) {
-                positionsChecked.add(o);
+            BlockPos o = p.offset(i);
+            if(!positionsFound.contains(o)) {
                 if(level.getBlockState(o).getBlock().equals(Content.Blocks.FRAME.get())) {
                     positionsFound.add(o);
-                    cursor = o;
-                    return;
+                    tick(o, max-1);
                 }
             }
         }
 
-        if(checked == positionsChecked.size()) {
+        if(checked == positionsFound.size()) {
             done = true;
         }
     }
