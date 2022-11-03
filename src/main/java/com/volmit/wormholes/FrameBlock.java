@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -18,7 +19,6 @@ import qouteall.imm_ptl.core.portal.PortalManipulation;
 
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
 public class FrameBlock extends Block {
     public static final LongProperty FRAME_MSB = LongProperty.create("worm_msb", Long.MIN_VALUE, Long.MAX_VALUE);
     public static final LongProperty FRAME_LSB = LongProperty.create("worm_lsb", Long.MIN_VALUE, Long.MAX_VALUE);
@@ -61,12 +61,14 @@ public class FrameBlock extends Block {
         }
     }
 
-    @SubscribeEvent
-    public static void block_break(final BlockEvent.BreakEvent event) {
-        if(event.getPlayer().getLevel().isClientSide()) {
+    @Override
+    public void destroy(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+        if(pLevel.isClientSide())
+        {
             return;
         }
 
-        breakCheckLogic((ServerLevel) event.getPlayer().getLevel(), event.getPos(), event.getState());
+        breakCheckLogic((ServerLevel) pLevel, pPos, pState);
+        super.destroy(pLevel, pPos, pState);
     }
 }
