@@ -15,54 +15,27 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+import qouteall.imm_ptl.core.api.PortalAPI;
+import qouteall.imm_ptl.core.portal.Portal;
 
 import java.util.stream.Collectors;
 
-@Mod("wormholes")
+@Mod(WormholesMod.MOD_ID)
 public class WormholesMod
 {
+    public static final String MOD_ID = "wormholes";
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public WormholesMod()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    private void setup(final FMLCommonSetupEvent event)
-    {
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-    }
-
-    private void enqueueIMC(final InterModEnqueueEvent event)
-    {
-        InterModComms.sendTo("wormholes", "helloworld", () -> { LOGGER.info("Hello world from the MDK"); return "Hello world";});
-    }
-
-    private void processIMC(final InterModProcessEvent event)
-    {
-        LOGGER.info("Got IMC {}", event.getIMCStream().
-                map(m->m.messageSupplier().get()).
-                collect(Collectors.toList()));
+        Content.Blocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        Content.Items.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
         LOGGER.info("HELLO from server starting");
-    }
-
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents
-    {
-        @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent)
-        {
-            // Register a new block here
-            LOGGER.info("HELLO from Register Block");
-        }
     }
 }
