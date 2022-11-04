@@ -1,5 +1,7 @@
 package com.volmit.wormholes;
 
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import com.volmit.WormholesMod;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;

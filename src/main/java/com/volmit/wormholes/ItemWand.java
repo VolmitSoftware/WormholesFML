@@ -18,6 +18,9 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.sound.SoundEvent;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ItemWand extends Item {
     public ItemWand(Properties properties) {
         super(properties.stacksTo(1).fireResistant()
@@ -97,6 +100,19 @@ public class ItemWand extends Item {
     }
 
     public Direction computeDirection(BlockPos point, BlockPos toward, Cuboid cc) {
+        Set<Direction> allowed = new HashSet<>();
+
+        if(cc.getSizeY() == 1) {
+            allowed.add(Direction.UP);
+            allowed.add(Direction.DOWN);
+        } else if(cc.getSizeX() == 1) {
+            allowed.add(Direction.EAST);
+            allowed.add(Direction.WEST);
+        } else if(cc.getSizeZ() == 1) {
+            allowed.add(Direction.NORTH);
+            allowed.add(Direction.SOUTH);
+        }
+
         BlockPos vec = toward.subtract(point);
         double x = vec.getX();
         double y = vec.getY();
@@ -111,7 +127,7 @@ public class ItemWand extends Item {
         double m = Double.MAX_VALUE;
         Direction d = Direction.NORTH;
 
-        for (Direction i : Direction.values()) {
+        for (Direction i : allowed) {
             double dx = v.distanceTo(new Vec3(i.getStepX(), i.getStepY(), i.getStepZ()));
 
             if (dx < m) {
