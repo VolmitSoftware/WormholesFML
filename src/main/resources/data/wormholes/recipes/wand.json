@@ -1,26 +1,26 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "result": {
     "item": "wormholes:wand",
     "count": 1
   },
   "pattern": [
-    " CE",
-    "CSC",
-    "DC "
+    " EA",
+    " NE",
+    "R  "
   ],
   "key": {
-    "C": {
+    "A": {
       "item": "minecraft:amethyst_shard"
     },
     "E": {
-      "item": "minecraft:ender_pearl"
+      "item": "minecraft:ender_eye"
     },
-    "S": {
-      "item": "minecraft:stick"
+    "R": {
+      "item": "minecraft:blaze_rod"
     },
-    "D": {
-      "item": "minecraft:diamond"
+    "N": {
+      "item": "minecraft:netherite_ingot"
     }
   }
 }
