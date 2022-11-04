@@ -1,15 +1,21 @@
 package com.volmit.wormholes;
 
+import jdk.jfr.Category;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.sound.SoundEvent;
 
 public class ItemWand extends Item {
     public ItemWand(Properties properties) {
@@ -32,6 +38,7 @@ public class ItemWand extends Item {
         pContext.getPlayer().getCooldowns().addCooldown(this, 5);
         if (pContext.getPlayer().isCrouching()) {
             pContext.getPlayer().displayClientMessage(new TextComponent("Cleared Context Reference"), true);
+            pContext.getLevel().playSound(pContext.getPlayer(), pContext.getClickedPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 1f, 0.25f);
             clear(pContext.getItemInHand());
             return super.useOn(pContext);
         }
@@ -48,8 +55,12 @@ public class ItemWand extends Item {
                     if (PortalUtil.linkPortals(pContext.getPlayer(), (ServerLevel) pContext.getLevel(), getDirection(pContext.getItemInHand()), getDimension(pContext.getItemInHand()),
                             getCuboid(pContext.getItemInHand()), computeDirection(playerPos, c.getCenter()), pContext.getLevel().dimension().location().toString(), c.clone())) {
                         pContext.getPlayer().displayClientMessage(new TextComponent("Linked!"), true);
+                        pContext.getLevel().playSound(pContext.getPlayer(), pContext.getClickedPos(), SoundEvents.ENDER_CHEST_OPEN, SoundSource.BLOCKS, 1f, 0.25f);
+
                         clear(pContext.getItemInHand());
-                        pContext.getItemInHand().setDamageValue(pContext.getItemInHand().getDamageValue() + 1);
+                        if (!pContext.getPlayer().isCreative()) {
+                            pContext.getItemInHand().setDamageValue(pContext.getItemInHand().getDamageValue() + 1);
+                        }
                     } else {
                         pContext.getPlayer().displayClientMessage(new TextComponent("Cleared Context 2"), true);
                         clear(pContext.getItemInHand());
@@ -58,6 +69,7 @@ public class ItemWand extends Item {
                 }
 
                 pContext.getPlayer().displayClientMessage(new TextComponent("Set Context Point"), true);
+                pContext.getLevel().playSound(pContext.getPlayer(), pContext.getClickedPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 1f, 1f);
                 setCuboid(pContext.getItemInHand(), c);
                 setDimension(pContext.getItemInHand(), pContext.getLevel().dimension().location().toString());
                 setDirection(pContext.getItemInHand(), computeDirection(playerPos, c.getCenter()));
