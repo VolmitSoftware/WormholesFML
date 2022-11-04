@@ -20,11 +20,10 @@ package com.volmit.wormholes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 
-import java.awt.Dimension;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Cuboids
@@ -34,11 +33,6 @@ import java.util.*;
 public class Cuboid {
     protected int x1, y1, z1;
     protected int x2, y2, z2;
-
-    public AABB aabb()
-    {
-        return new AABB(x1, y1, z1, x2, y2, z2);
-    }
 
     /**
      * Construct a Cuboid given two Location objects which represent any two corners
@@ -54,22 +48,6 @@ public class Cuboid {
         x2 = Math.max(l1.getX(), l2.getX());
         y2 = Math.max(l1.getY(), l2.getY());
         z2 = Math.max(l1.getZ(), l2.getZ());
-    }
-
-    public List<BlockPos> getBlockPositions()
-    {
-        List<BlockPos> positions = new ArrayList<>();
-        for(int x = x1; x <= x2; x++)
-        {
-            for(int y = y1; y <= y2; y++)
-            {
-                for(int z = z1; z <= z2; z++)
-                {
-                    positions.add(new BlockPos(x, y, z));
-                }
-            }
-        }
-        return positions;
     }
 
     /**
@@ -93,12 +71,12 @@ public class Cuboid {
     /**
      * Construct a Cuboid in the given World and xyz co-ordinates
      *
-     * @param x1    X co-ordinate of corner 1
-     * @param y1    Y co-ordinate of corner 1
-     * @param z1    Z co-ordinate of corner 1
-     * @param x2    X co-ordinate of corner 2
-     * @param y2    Y co-ordinate of corner 2
-     * @param z2    Z co-ordinate of corner 2
+     * @param x1 X co-ordinate of corner 1
+     * @param y1 Y co-ordinate of corner 1
+     * @param z1 Z co-ordinate of corner 1
+     * @param x2 X co-ordinate of corner 2
+     * @param y2 Y co-ordinate of corner 2
+     * @param z2 Z co-ordinate of corner 2
      */
     public Cuboid(int x1, int y1, int z1, int x2, int y2, int z2) {
         this.x1 = Math.min(x1, x2);
@@ -107,6 +85,22 @@ public class Cuboid {
         this.y2 = Math.max(y1, y2);
         this.z1 = Math.min(z1, z2);
         this.z2 = Math.max(z1, z2);
+    }
+
+    public AABB aabb() {
+        return new AABB(x1, y1, z1, x2, y2, z2);
+    }
+
+    public List<BlockPos> getBlockPositions() {
+        List<BlockPos> positions = new ArrayList<>();
+        for (int x = x1; x <= x2; x++) {
+            for (int y = y1; y <= y2; y++) {
+                for (int z = z1; z <= z2; z++) {
+                    positions.add(new BlockPos(x, y, z));
+                }
+            }
+        }
+        return positions;
     }
 
     /**
@@ -450,19 +444,16 @@ public class Cuboid {
     }
 
     public Cuboid insetPortal(ServerLevel level) {
-        if(getSizeX() > 1 && getSizeZ() > 1)
-        {
+        if (getSizeX() > 1 && getSizeZ() > 1) {
             return new Cuboid(x1 + 1, y1, z1 + 1, x2, y2, z2);
         }
 
-        if(getSizeX() > 1 && getSizeY() > 1)
-        {
+        if (getSizeX() > 1 && getSizeY() > 1) {
             return new Cuboid(x1 + 1, y1 + 1, z1, x2, y2, z2);
         }
 
-        if(getSizeZ() > 1 && getSizeY() > 1)
-        {
-            return new Cuboid(x1, y1 + 1, z1+1, x2, y2, z2);
+        if (getSizeZ() > 1 && getSizeY() > 1) {
+            return new Cuboid(x1, y1 + 1, z1 + 1, x2, y2, z2);
         }
 
         return this;

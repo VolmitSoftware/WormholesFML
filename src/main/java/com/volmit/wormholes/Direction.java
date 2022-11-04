@@ -3,7 +3,6 @@ package com.volmit.wormholes;
 import net.minecraft.core.BlockPos;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
