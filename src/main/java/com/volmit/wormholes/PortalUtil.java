@@ -38,20 +38,22 @@ public class PortalUtil {
     public static boolean linkPortals(Player player, ServerLevel level, Direction dir1, String dim1, Cuboid c1, Direction dir2, String dim2, Cuboid c2) {
         Set<BlockPos> positions1 = new HashSet<>();
         Set<BlockPos> positions2 = new HashSet<>();
+        ServerLevel l1 = level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));
+        ServerLevel l2 = level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));
         for(BlockPos i : c1.getBlockPositions()) {
-            if(level.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
+            if(l1.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
                 positions1.add(i);
             }
         }
 
         for(BlockPos i : c2.getBlockPositions()) {
-            if(level.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
+            if(l1.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
                 positions2.add(i);
             }
         }
 
-        c1 = c1.insetPortal(level);
-        c2 = c2.insetPortal(level);
+        c1 = c1.insetPortal(l1);
+        c2 = c2.insetPortal(l2);
         AABB frame1 = fix(c1.aabb(), dir1, dir2);
         AABB frame2 = fix(c2.aabb(), dir2, dir1);
         Vec3 pos1 = frame1.getCenter();
@@ -66,13 +68,13 @@ public class PortalUtil {
         DQuaternion q2 = new DQuaternion(cross2.x(), cross2.y(), cross2.z(), Math.sqrt(
             (angle1.lengthSqr() * angle2.lengthSqr()) + angle2.dot(angle1)
         )).getNormalized();
-        Portal portal =  IPRegistry.PORTAL.get().create(level);
+        Portal portal =  IPRegistry.PORTAL.get().create(l1);
         PortalAPI.setPortalOrthodoxShape(portal, dir1, frame1);
         portal.setDestinationDimension(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));
         portal.setDestination(pos2);
         portal.setPos(pos1);
         portal.setRotationTransformationD(q1);
-        Portal portal2 =  IPRegistry.PORTAL.get().create(level);
+        Portal portal2 =  IPRegistry.PORTAL.get().create(l2);
         PortalAPI.setPortalOrthodoxShape(portal2, dir2, frame2);
         portal2.setDestinationDimension(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim1)));
         portal2.setDestination(pos1);
@@ -84,16 +86,16 @@ public class PortalUtil {
         McHelper.spawnServerEntity(portal);
 
         for(BlockPos i : positions1) {
-            if(level.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
-                BlockState state = level.getBlockState(i);
-                level.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int)pos1.x(),(int) pos1.y(), (int)pos1.z()), i, state));
+            if(l1.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
+                BlockState state = l1.getBlockState(i);
+                l1.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int)pos1.x(),(int) pos1.y(), (int)pos1.z()), i, state));
             }
         }
 
         for(BlockPos i : positions2) {
-            if(level.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
-                BlockState state = level.getBlockState(i);
-                level.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int)pos2.x(),(int) pos2.y(), (int)pos2.z()), i, state));
+            if(l2.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
+                BlockState state = l2.getBlockState(i);
+                l2.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int)pos2.x(),(int) pos2.y(), (int)pos2.z()), i, state));
             }
         }
 
