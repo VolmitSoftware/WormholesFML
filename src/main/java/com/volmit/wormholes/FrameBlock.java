@@ -1,7 +1,9 @@
 package com.volmit.wormholes;
 
+import com.volmit.util.SoundUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -12,6 +14,8 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.AABB;
 import qouteall.imm_ptl.core.portal.Portal;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FrameBlock extends Block {
     public static final int MAX_PORTAL_RADIUS = 6;
@@ -61,11 +65,18 @@ public class FrameBlock extends Block {
         }
 
         BlockPos id = getLinkedPortal(pos, state);
+        AtomicBoolean removed = new AtomicBoolean(false);
         level.getEntitiesOfClass(Portal.class, new AABB(id).inflate(0.5), (f) -> true).forEach((e) -> {
             PortalManipulation.removeConnectedPortals(e, (px) -> {
             });
+            removed.set(true);
             e.remove(Entity.RemovalReason.KILLED);
         });
+
+        if(removed.get()) {
+            SoundUtil.play(level, new AABB(id).getCenter(), SoundEvents.CONDUIT_ACTIVATE, 1f, 0.75f);
+            SoundUtil.play(level, new AABB(id).getCenter(), SoundEvents.CONDUIT_DEACTIVATE, 1f, 1.25f);
+        }
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

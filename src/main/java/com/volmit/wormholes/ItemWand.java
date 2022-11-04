@@ -1,5 +1,6 @@
 package com.volmit.wormholes;
 
+import com.volmit.util.SoundUtil;
 import jdk.jfr.Category;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -38,8 +39,9 @@ public class ItemWand extends Item {
         pContext.getPlayer().getCooldowns().addCooldown(this, 5);
         if (pContext.getPlayer().isCrouching()) {
             pContext.getPlayer().displayClientMessage(new TextComponent("Cleared Context Reference"), true);
-            pContext.getLevel().playSound(pContext.getPlayer(), pContext.getClickedPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 1f, 0.25f);
             clear(pContext.getItemInHand());
+            SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.AMETHYST_BLOCK_BREAK, 1f, 0.5f);
+            SoundUtil.play((ServerLevel) pContext.getLevel(),pContext.getPlayer().position(), SoundEvents.DEEPSLATE_BREAK, 1f, 0.8f);
             return super.useOn(pContext);
         }
 
@@ -55,24 +57,28 @@ public class ItemWand extends Item {
                     if (PortalUtil.linkPortals(pContext.getPlayer(), (ServerLevel) pContext.getLevel(), getDirection(pContext.getItemInHand()), getDimension(pContext.getItemInHand()),
                             getCuboid(pContext.getItemInHand()), computeDirection(playerPos, c.getCenter(), c), pContext.getLevel().dimension().location().toString(), c.clone())) {
                         pContext.getPlayer().displayClientMessage(new TextComponent("Linked!"), true);
-                        pContext.getLevel().playSound(pContext.getPlayer(), pContext.getClickedPos(), SoundEvents.ENDER_CHEST_OPEN, SoundSource.BLOCKS, 1f, 0.25f);
 
                         clear(pContext.getItemInHand());
                         if (!pContext.getPlayer().isCreative()) {
                             pContext.getItemInHand().setDamageValue(pContext.getItemInHand().getDamageValue() + 1);
                         }
+                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.DEEPSLATE_TILES_BREAK, 1f, 1.85f);
+                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.CONDUIT_ACTIVATE, 1f, 0.5f);
+                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.END_PORTAL_SPAWN, 1f, 0.5f);
+
                     } else {
-                        pContext.getPlayer().displayClientMessage(new TextComponent("Cleared Context 2"), true);
                         clear(pContext.getItemInHand());
+                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.AMETHYST_BLOCK_BREAK, 1f, 0.2f);
                     }
                     return super.useOn(pContext);
                 }
 
                 pContext.getPlayer().displayClientMessage(new TextComponent("Set Context Point"), true);
-                pContext.getLevel().playSound(pContext.getPlayer(), pContext.getClickedPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 1f, 1f);
                 setCuboid(pContext.getItemInHand(), c);
                 setDimension(pContext.getItemInHand(), pContext.getLevel().dimension().location().toString());
                 setDirection(pContext.getItemInHand(), computeDirection(playerPos, c.getCenter(), c));
+                SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.DEEPSLATE_TILES_BREAK, 1f, 1.85f);
+                SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.AMETHYST_BLOCK_PLACE, 1f, 0.5f);
             }
         }
 
