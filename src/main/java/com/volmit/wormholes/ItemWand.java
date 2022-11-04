@@ -2,6 +2,7 @@ package com.volmit.wormholes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
@@ -30,6 +31,7 @@ public class ItemWand extends Item {
 
         pContext.getPlayer().getCooldowns().addCooldown(this, 5);
         if (pContext.getPlayer().isCrouching()) {
+            pContext.getPlayer().displayClientMessage(new TextComponent("Cleared Context Reference"), true);
             clear(pContext.getItemInHand());
             return super.useOn(pContext);
         }
@@ -45,15 +47,17 @@ public class ItemWand extends Item {
                 if (hasData(pContext.getItemInHand())) {
                     if (PortalUtil.linkPortals(pContext.getPlayer(), (ServerLevel) pContext.getLevel(), getDirection(pContext.getItemInHand()), getDimension(pContext.getItemInHand()),
                             getCuboid(pContext.getItemInHand()), computeDirection(playerPos, c.getCenter()), pContext.getLevel().dimension().location().toString(), c.clone())) {
+                        pContext.getPlayer().displayClientMessage(new TextComponent("Linked!"), true);
                         clear(pContext.getItemInHand());
                         pContext.getItemInHand().setDamageValue(pContext.getItemInHand().getDamageValue() + 1);
-                        return super.useOn(pContext);
                     } else {
+                        pContext.getPlayer().displayClientMessage(new TextComponent("Cleared Context 2"), true);
                         clear(pContext.getItemInHand());
-                        return super.useOn(pContext);
                     }
+                    return super.useOn(pContext);
                 }
 
+                pContext.getPlayer().displayClientMessage(new TextComponent("Set Context Point"), true);
                 setCuboid(pContext.getItemInHand(), c);
                 setDimension(pContext.getItemInHand(), pContext.getLevel().dimension().location().toString());
                 setDirection(pContext.getItemInHand(), computeDirection(playerPos, c.getCenter()));

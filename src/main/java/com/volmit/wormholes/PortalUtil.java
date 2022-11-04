@@ -15,6 +15,7 @@ import qouteall.imm_ptl.core.McHelper;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.platform_specific.IPRegistry;
 import qouteall.imm_ptl.core.portal.Portal;
+import qouteall.imm_ptl.core.portal.PortalExtension;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
 import qouteall.q_misc_util.my_util.DQuaternion;
 
@@ -22,14 +23,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PortalUtil {
+
     public static boolean linkPortals(Player player, ServerLevel level, Direction dir1, String dim1, Cuboid c1, Direction dir2, String dim2, Cuboid c2) {
-        if (!dim1.equals(dim2)) {
-            return false;
-        }
 
         Set<BlockPos> positions1 = new HashSet<>();
         Set<BlockPos> positions2 = new HashSet<>();
-        ServerLevel l1 = level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));
+        ServerLevel l1 = level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim1)));
         ServerLevel l2 = level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));
         for (BlockPos i : c1.getBlockPositions()) {
             if (l1.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
@@ -59,30 +58,31 @@ public class PortalUtil {
                 (angle1.lengthSqr() * angle2.lengthSqr()) + angle1.dot(angle2)
         )).getNormalized();
         DQuaternion q2 = new DQuaternion(cross2.x(), cross2.y(), cross2.z(), Math.sqrt(
-                (angle1.lengthSqr() * angle2.lengthSqr()) + angle2.dot(angle1)
+                (angle2.lengthSqr() * angle1.lengthSqr()) + angle2.dot(angle1)
         )).getNormalized();
 
 
-        Portal portal = IPRegistry.PORTAL.get().create(l1);
+        Portal portal = null;
+        if (l1 != null) {
+            portal = IPRegistry.PORTAL.get().create(l1);
+        } else {
+            return false;
+        }
         PortalAPI.setPortalOrthodoxShape(portal, dir1, frame1);
         portal.setDestinationDimension(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));
         portal.setDestination(pos2);
         portal.setPos(pos1);
         portal.setRotationTransformationD(q1);
 
+        PortalExtension.get(portal).bindCluster = true;
+        Portal flipped = PortalManipulation.createFlippedPortal(portal, (EntityType<Portal>) portal.getType() );
+        Portal reverse = PortalManipulation.createReversePortal(portal, (EntityType<Portal>) portal.getType());
+        Portal parallel = PortalManipulation.createReversePortal(flipped, (EntityType<Portal>) portal.getType());
 
-        Portal portal2 = IPRegistry.PORTAL.get().create(l2);
-        PortalAPI.setPortalOrthodoxShape(portal2, dir2, frame2);
-        portal2.setDestinationDimension(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim1)));
-        portal2.setDestination(pos1);
-        portal2.setPos(pos2);
-        portal2.setRotationTransformationD(q2);
-        PortalManipulation.completeBiFacedPortal(portal2, (EntityType<Portal>) portal.getType());
-        PortalManipulation.completeBiFacedPortal(portal, (EntityType<Portal>) portal.getType());
-
-
-        McHelper.spawnServerEntity(portal2);
-        McHelper.spawnServerEntity(portal);
+        Portal[] portals = {portal, flipped, reverse, parallel};
+        for (Portal p : portals) {
+            McHelper.spawnServerEntity(p);
+        }
 
         for (BlockPos i : positions1) {
             if (l1.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
