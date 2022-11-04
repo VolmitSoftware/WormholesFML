@@ -1,5 +1,6 @@
 package com.volmit.wormholes;
 
+import com.mojang.math.Quaternion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -52,8 +53,8 @@ public class PortalUtil {
         Vec3 angle2 = new Vec3(dir2.getStepX(), dir2.getStepY(), dir2.getStepZ());
 
 
-        DQuaternion q1 = getQuaternion(angle1, angle2);
-        DQuaternion q2 = getQuaternion(angle2, angle1);
+        DQuaternion q1 = getQuaternion(angle1, angle2, dir1.equals(dir2.getOpposite()));
+        DQuaternion q2 = getQuaternion(angle2, angle1, dir2.equals(dir1.getOpposite()));
 
 
         Portal portal = IPRegistry.PORTAL.get().create(l1);
@@ -104,9 +105,10 @@ public class PortalUtil {
         return true;
     }
 
-    private static DQuaternion getQuaternion(Vec3 angle1, Vec3 angle2) {
-        if(angle1.dot(angle2) > 0.9999999 && angle2.dot(angle1) < -0.9999999) {
-            return DQuaternion.identity;
+    private static DQuaternion getQuaternion(Vec3 angle1, Vec3 angle2, boolean flip) {
+        if(flip)
+        {
+            return new DQuaternion(angle1.x(), angle1.y(), angle1.z(), 180);
         }
 
         Vec3 cross = angle1.cross(angle2);
