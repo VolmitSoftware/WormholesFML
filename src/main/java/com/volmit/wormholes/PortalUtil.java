@@ -51,12 +51,8 @@ public class PortalUtil {
         Vec3 pos2 = frame2.getCenter();
         Vec3 angle1 = new Vec3(dir1.getStepX(), dir1.getStepY(), dir1.getStepZ());
         Vec3 angle2 = new Vec3(dir2.getStepX(), dir2.getStepY(), dir2.getStepZ());
-
-
         DQuaternion q1 = getQuaternion(angle1, angle2, dir1.equals(dir2.getOpposite()));
         DQuaternion q2 = getQuaternion(angle2, angle1, dir2.equals(dir1.getOpposite()));
-
-
         Portal portal = IPRegistry.PORTAL.get().create(l1);
         PortalAPI.setPortalOrthodoxShape(portal, dir1, frame1);
         portal.setDestinationDimension(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));
@@ -72,21 +68,11 @@ public class PortalUtil {
         portal2.setRotationTransformationD(q2);
 
         PortalExtension.get(portal).bindCluster = true;
-        Portal flipped = PortalManipulation.createFlippedPortal(portal, (EntityType<Portal>) portal.getType()); // This makes the first portal frame (front and back), and connects the 2 planes
-
         PortalExtension.get(portal2).bindCluster = true;
-        Portal flipped2 = PortalManipulation.createFlippedPortal(portal2, (EntityType<Portal>) portal2.getType()); // This makes the second portal frame (front and back), and connects the 2 planes
-
-        Portal[] portals = {
-                portal, flipped,
-                portal2, flipped2
-        };
-        for (Portal p : portals) {
-            System.out.println("Portal: " + p + "-------------------------------------------- DEBUG");
-            System.out.println(p.getBoundingBox().getSize());
-            McHelper.spawnServerEntity(p);
-
-        }
+        McHelper.spawnServerEntity(portal);
+        McHelper.spawnServerEntity(portal2);
+        McHelper.spawnServerEntity(PortalManipulation.createFlippedPortal(portal, (EntityType<Portal>) portal.getType()));
+        McHelper.spawnServerEntity(PortalManipulation.createFlippedPortal(portal2, (EntityType<Portal>) portal2.getType()));
 
         for (BlockPos i : positions1) {
             if (l1.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
@@ -106,7 +92,14 @@ public class PortalUtil {
     }
 
     private static DQuaternion getQuaternion(Vec3 angle1, Vec3 angle2, boolean flip) {
-        return DQuaternion.getRotationBetween(angle1, angle2);
+        if(flip) {
+            return DQuaternion.identity; //  DQuaternion.rotationByDegrees(angle1, 180);
+        }
+
+        Vec3 cross = angle1.cross(angle2);
+        return new DQuaternion(cross.x(), cross.y(), cross.z(), Math.sqrt(
+            (angle1.lengthSqr() * angle2.lengthSqr()) + angle1.dot(angle2)
+        )).getNormalized();
     }
 
     private static AABB fix(AABB aabb, Direction direction, Direction otherDirection) {
