@@ -65,7 +65,6 @@ public class ItemWand extends Item {
                         SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.DEEPSLATE_TILES_BREAK, 1f, 1.85f);
                         SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.CONDUIT_ACTIVATE, 1f, 0.5f);
                         SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.END_PORTAL_SPAWN, 1f, 0.5f);
-
                     } else {
                         clear(pContext.getItemInHand());
                         SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.AMETHYST_BLOCK_BREAK, 1f, 0.2f);
