@@ -50,16 +50,10 @@ public class PortalUtil {
         Vec3 pos2 = frame2.getCenter();
         Vec3 angle1 = new Vec3(dir1.getStepX(), dir1.getStepY(), dir1.getStepZ());
         Vec3 angle2 = new Vec3(dir2.getStepX(), dir2.getStepY(), dir2.getStepZ());
-        Vec3 cross1 = angle1.cross(angle2);
-        Vec3 cross2 = angle2.cross(angle1);
 
 
-        DQuaternion q1 = new DQuaternion(cross1.x(), cross1.y(), cross1.z(), Math.sqrt(
-                (angle1.lengthSqr() * angle2.lengthSqr()) + angle1.dot(angle2)
-        )).getNormalized();
-        DQuaternion q2 = new DQuaternion(cross2.x(), cross2.y(), cross2.z(), Math.sqrt(
-                (angle2.lengthSqr() * angle1.lengthSqr()) + angle2.dot(angle1)
-        )).getNormalized();
+        DQuaternion q1 = getQuaternion(angle1, angle2);
+        DQuaternion q2 = getQuaternion(angle2, angle1);
 
 
         Portal portal = IPRegistry.PORTAL.get().create(l1);
@@ -108,6 +102,17 @@ public class PortalUtil {
         }
 
         return true;
+    }
+
+    private static DQuaternion getQuaternion(Vec3 angle1, Vec3 angle2) {
+        if(angle1.dot(angle2) > 0.9999999 && angle2.dot(angle1) < -0.9999999) {
+            return DQuaternion.identity;
+        }
+
+        Vec3 cross = angle1.cross(angle2);
+        return new DQuaternion(cross.x(), cross.y(), cross.z(), Math.sqrt(
+            (angle1.lengthSqr() * angle2.lengthSqr()) + angle1.dot(angle2)
+        )).getNormalized();
     }
 
     private static AABB fix(AABB aabb, Direction direction, Direction otherDirection) {
