@@ -1,6 +1,7 @@
 package com.volmit.wormholes;
 
 import com.mojang.math.Quaternion;
+import net.minecraft.client.particle.AshParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -31,6 +32,7 @@ public class PortalUtil {
         Set<BlockPos> positions2 = new HashSet<>();
         ServerLevel l1 = level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim1)));
         ServerLevel l2 = level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));
+
         for (BlockPos i : c1.getBlockPositions()) {
             if (l1.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
                 positions1.add(i);
@@ -69,10 +71,10 @@ public class PortalUtil {
 
         PortalExtension.get(portal).bindCluster = true;
         PortalExtension.get(portal2).bindCluster = true;
-        McHelper.spawnServerEntity(portal);
-        McHelper.spawnServerEntity(portal2);
-        McHelper.spawnServerEntity(PortalManipulation.createFlippedPortal(portal, (EntityType<Portal>) portal.getType()));
-        McHelper.spawnServerEntity(PortalManipulation.createFlippedPortal(portal2, (EntityType<Portal>) portal2.getType()));
+        McHelper.spawnServerEntity(configure(portal));
+        McHelper.spawnServerEntity(configure(portal2));
+        McHelper.spawnServerEntity(configure(PortalManipulation.createFlippedPortal(portal, (EntityType<Portal>) portal.getType())));
+        McHelper.spawnServerEntity(configure(PortalManipulation.createFlippedPortal(portal2, (EntityType<Portal>) portal2.getType())));
 
         for (BlockPos i : positions1) {
             if (l1.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
@@ -89,6 +91,11 @@ public class PortalUtil {
         }
 
         return true;
+    }
+
+    private static Portal configure(Portal p)
+    {
+        return p;
     }
 
     private static DQuaternion getQuaternion(Vec3 angle1, Vec3 angle2, boolean flip) {
