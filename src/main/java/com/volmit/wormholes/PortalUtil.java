@@ -36,6 +36,10 @@ import java.util.Set;
 
 public class PortalUtil {
     public static boolean linkPortals(Player player, ServerLevel level, Direction dir1, String dim1, Cuboid c1, Direction dir2, String dim2, Cuboid c2) {
+        if(!dim1.equals(dim2)) {
+            return false;
+        }
+
         Set<BlockPos> positions1 = new HashSet<>();
         Set<BlockPos> positions2 = new HashSet<>();
         ServerLevel l1 = level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));

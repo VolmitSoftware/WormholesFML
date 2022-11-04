@@ -33,6 +33,7 @@ public class ItemWand extends Item {
             return super.useOn(pContext);
         }
 
+        pContext.getPlayer().getCooldowns().addCooldown(this, 5);
         if(pContext.getPlayer().isCrouching()) {
             clear(pContext.getItemInHand());
             return super.useOn(pContext);
@@ -51,6 +52,11 @@ public class ItemWand extends Item {
                         getCuboid(pContext.getItemInHand()), computeDirection(playerPos, c.getCenter()), pContext.getLevel().dimension().location().toString(), c.clone())) {
                         clear(pContext.getItemInHand());
                         pContext.getItemInHand().setDamageValue(pContext.getItemInHand().getDamageValue() + 1);
+                        return super.useOn(pContext);
+                    }
+
+                    else {
+                        clear(pContext.getItemInHand());
                         return super.useOn(pContext);
                     }
                 }
