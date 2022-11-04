@@ -106,15 +106,7 @@ public class PortalUtil {
     }
 
     private static DQuaternion getQuaternion(Vec3 angle1, Vec3 angle2, boolean flip) {
-        if(flip)
-        {
-            return new DQuaternion(angle1.x(), angle1.y(), angle1.z(), 180);
-        }
-
-        Vec3 cross = angle1.cross(angle2);
-        return new DQuaternion(cross.x(), cross.y(), cross.z(), Math.sqrt(
-            (angle1.lengthSqr() * angle2.lengthSqr()) + angle1.dot(angle2)
-        )).getNormalized();
+        return DQuaternion.getRotationBetween(angle1, angle2);
     }
 
     private static AABB fix(AABB aabb, Direction direction, Direction otherDirection) {
