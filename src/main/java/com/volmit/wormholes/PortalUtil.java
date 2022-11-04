@@ -62,26 +62,35 @@ public class PortalUtil {
         )).getNormalized();
 
 
-        Portal portal = null;
-        if (l1 != null) {
-            portal = IPRegistry.PORTAL.get().create(l1);
-        } else {
-            return false;
-        }
+        Portal portal = IPRegistry.PORTAL.get().create(l1);
         PortalAPI.setPortalOrthodoxShape(portal, dir1, frame1);
         portal.setDestinationDimension(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));
         portal.setDestination(pos2);
         portal.setPos(pos1);
         portal.setRotationTransformationD(q1);
 
-        PortalExtension.get(portal).bindCluster = true;
-        Portal flipped = PortalManipulation.createFlippedPortal(portal, (EntityType<Portal>) portal.getType() );
-        Portal reverse = PortalManipulation.createReversePortal(portal, (EntityType<Portal>) portal.getType());
-        Portal parallel = PortalManipulation.createReversePortal(flipped, (EntityType<Portal>) portal.getType());
+        Portal portal2 = IPRegistry.PORTAL.get().create(l2);
+        PortalAPI.setPortalOrthodoxShape(portal2, dir2, frame2);
+        portal2.setDestinationDimension(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim1)));
+        portal2.setDestination(pos1);
+        portal2.setPos(pos2);
+        portal2.setRotationTransformationD(q2);
 
-        Portal[] portals = {portal, flipped, reverse, parallel};
+        PortalExtension.get(portal).bindCluster = true;
+        Portal flipped = PortalManipulation.createFlippedPortal(portal, (EntityType<Portal>) portal.getType()); // This makes the first portal frame (front and back), and connects the 2 planes
+
+        PortalExtension.get(portal2).bindCluster = true;
+        Portal flipped2 = PortalManipulation.createFlippedPortal(portal2, (EntityType<Portal>) portal2.getType()); // This makes the second portal frame (front and back), and connects the 2 planes
+
+        Portal[] portals = {
+                portal, flipped,
+                portal2, flipped2
+        };
         for (Portal p : portals) {
+            System.out.println("Portal: " + p + "-------------------------------------------- DEBUG");
+            System.out.println(p.getBoundingBox().getSize());
             McHelper.spawnServerEntity(p);
+
         }
 
         for (BlockPos i : positions1) {
