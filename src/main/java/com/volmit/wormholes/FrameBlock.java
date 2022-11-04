@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.LevelAccessor;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,53 +29,50 @@ import qouteall.imm_ptl.core.portal.PortalManipulation;
 import java.util.UUID;
 
 public class FrameBlock extends Block {
-    public static final LongProperty FRAME_MSB = LongProperty.create("worm_msb", Long.MIN_VALUE, Long.MAX_VALUE);
-    public static final LongProperty FRAME_LSB = LongProperty.create("worm_lsb", Long.MIN_VALUE, Long.MAX_VALUE);
+    public static final int MAX_PORTAL_RADIUS = 6;
+    public static final IntegerProperty FRAME_REL_X = IntegerProperty.create("wormx", 0, (MAX_PORTAL_RADIUS * 2) + 1);
+    public static final IntegerProperty FRAME_REL_Y = IntegerProperty.create("wormy", 0, (MAX_PORTAL_RADIUS * 2) + 1);
+    public static final IntegerProperty FRAME_REL_Z = IntegerProperty.create("wormz", 0, (MAX_PORTAL_RADIUS * 2) + 1);
 
     public FrameBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
-            .setValue(FRAME_MSB, 0L)
-            .setValue(FRAME_LSB, 0L));
+            .setValue(FRAME_REL_X, MAX_PORTAL_RADIUS)
+            .setValue(FRAME_REL_Y, MAX_PORTAL_RADIUS)
+            .setValue(FRAME_REL_Z, MAX_PORTAL_RADIUS));
     }
 
-    public static UUID getLinkedPortal(BlockState b) {
-        long lsb = b.getValue(FRAME_LSB);
-        long msb = b.getValue(FRAME_MSB);
+    public static int sign(int i) {
+        return i - MAX_PORTAL_RADIUS;
+    }
 
+    public static int unsign(int i) {
+        return i + MAX_PORTAL_RADIUS;
+    }
 
-        if(lsb == 0 && msb == 0) {
-            return null;
-        }
-
-        return new UUID(msb, lsb);
+    public static BlockPos getLinkedPortal(BlockPos p, BlockState b) {
+       return new BlockPos(
+           p.getX() + sign(b.getValue(FRAME_REL_X)),
+           p.getY() + sign(b.getValue(FRAME_REL_Y)),
+           p.getZ() + sign(b.getValue(FRAME_REL_Z)));
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FRAME_MSB, FRAME_LSB);
+        builder.add(FRAME_REL_X, FRAME_REL_Y, FRAME_REL_Z);
     }
 
-    public static void linkPortal(UUID id, BlockState state) {
-        state.setValue(FRAME_MSB, id.getMostSignificantBits());
-        state.setValue(FRAME_LSB, id.getLeastSignificantBits());
-    }
-
-    public static void unlinkPortal(BlockState state) {
-        state.setValue(FRAME_MSB, 0L);
-        state.setValue(FRAME_LSB, 0L);
+    public static BlockState linkPortal(BlockPos portalPos, BlockPos blockPos, BlockState state) {
+        return state.setValue(FRAME_REL_X, unsign(portalPos.getX() - blockPos.getX()))
+        .setValue(FRAME_REL_Y, unsign(portalPos.getY() - blockPos.getY()))
+        .setValue(FRAME_REL_Z, unsign(portalPos.getZ() - blockPos.getZ()));
     }
 
     public static void breakCheckLogic(ServerLevel level, BlockPos pos, BlockState state) {
-        UUID id = getLinkedPortal(state);
-
-        if(id != null) {
-            Entity p = level.getEntity(id);
-
-            if(p instanceof Portal r) {
-                PortalManipulation.removeConnectedPortals(r, (px) -> {});
-                r.remove(Entity.RemovalReason.KILLED);
-            }
-        }
+        BlockPos id = getLinkedPortal(pos, state);
+        level.getEntitiesOfClass(Portal.class, new AABB(id).inflate(4), (f) -> true).forEach((e) -> {
+            PortalManipulation.removeConnectedPortals(e, (px) -> {});
+            e.remove(Entity.RemovalReason.KILLED);
+        });
     }
 
     @Override

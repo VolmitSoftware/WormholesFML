@@ -35,8 +35,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PortalUtil {
-    public static boolean linkPortals(Player player, ServerLevel level, Direction dir1, String dim1, Cuboid c1, Direction dir2, String dim2, Cuboid c2)
-    {
+    public static boolean linkPortals(Player player, ServerLevel level, Direction dir1, String dim1, Cuboid c1, Direction dir2, String dim2, Cuboid c2) {
         Set<BlockPos> positions1 = new HashSet<>();
         Set<BlockPos> positions2 = new HashSet<>();
         for(BlockPos i : c1.getBlockPositions()) {
@@ -45,7 +44,7 @@ public class PortalUtil {
             }
         }
 
-        for(BlockPos i : c1.getBlockPositions()) {
+        for(BlockPos i : c2.getBlockPositions()) {
             if(level.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
                 positions2.add(i);
             }
@@ -87,16 +86,14 @@ public class PortalUtil {
         for(BlockPos i : positions1) {
             if(level.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
                 BlockState state = level.getBlockState(i);
-                FrameBlock.linkPortal(portal.getUUID(), state);
-                level.setBlockAndUpdate(i, state);
+                level.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int)pos1.x(),(int) pos1.y(), (int)pos1.z()), i, state));
             }
         }
 
         for(BlockPos i : positions2) {
             if(level.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
                 BlockState state = level.getBlockState(i);
-                FrameBlock.linkPortal(portal2.getUUID(), state);
-                level.setBlockAndUpdate(i, state);
+                level.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int)pos2.x(),(int) pos2.y(), (int)pos2.z()), i, state));
             }
         }
 
