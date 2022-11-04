@@ -20,7 +20,7 @@ import net.minecraftforge.client.event.sound.SoundEvent;
 public class ItemWand extends Item {
     public ItemWand(Properties properties) {
         super(properties.stacksTo(1).fireResistant()
-                .durability(255).rarity(Rarity.RARE));
+                .durability(86).rarity(Rarity.RARE));
     }
 
     public void clear(ItemStack item) {
@@ -53,7 +53,7 @@ public class ItemWand extends Item {
             if (c != null) {
                 if (hasData(pContext.getItemInHand())) {
                     if (PortalUtil.linkPortals(pContext.getPlayer(), (ServerLevel) pContext.getLevel(), getDirection(pContext.getItemInHand()), getDimension(pContext.getItemInHand()),
-                            getCuboid(pContext.getItemInHand()), computeDirection(playerPos, c.getCenter()), pContext.getLevel().dimension().location().toString(), c.clone())) {
+                            getCuboid(pContext.getItemInHand()), computeDirection(playerPos, c.getCenter(), c), pContext.getLevel().dimension().location().toString(), c.clone())) {
                         pContext.getPlayer().displayClientMessage(new TextComponent("Linked!"), true);
                         pContext.getLevel().playSound(pContext.getPlayer(), pContext.getClickedPos(), SoundEvents.ENDER_CHEST_OPEN, SoundSource.BLOCKS, 1f, 0.25f);
 
@@ -72,7 +72,7 @@ public class ItemWand extends Item {
                 pContext.getLevel().playSound(pContext.getPlayer(), pContext.getClickedPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 1f, 1f);
                 setCuboid(pContext.getItemInHand(), c);
                 setDimension(pContext.getItemInHand(), pContext.getLevel().dimension().location().toString());
-                setDirection(pContext.getItemInHand(), computeDirection(playerPos, c.getCenter()));
+                setDirection(pContext.getItemInHand(), computeDirection(playerPos, c.getCenter(), c));
             }
         }
 
@@ -91,7 +91,7 @@ public class ItemWand extends Item {
         return stack.getOrCreateTag().getString("wormholesdim");
     }
 
-    public Direction computeDirection(BlockPos point, BlockPos toward) {
+    public Direction computeDirection(BlockPos point, BlockPos toward, Cuboid cc) {
         BlockPos vec = toward.subtract(point);
         double x = vec.getX();
         double y = vec.getY();
