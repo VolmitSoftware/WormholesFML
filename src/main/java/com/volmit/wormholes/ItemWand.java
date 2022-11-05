@@ -1,22 +1,17 @@
 package com.volmit.wormholes;
 
 import com.volmit.util.SoundUtil;
-import jdk.jfr.Category;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.sound.SoundEvent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -50,7 +45,7 @@ public class ItemWand extends Item {
 
         BlockPos pos = pContext.getClickedPos();
 
-        if (pContext.getLevel().getBlockState(pos).getBlock().equals(Content.Blocks.FRAME.get())) {
+        if (pContext.getLevel().getBlockState(pos).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
             Framer f = new Framer(pContext.getLevel(), pos);
             Cuboid c = f.validate();
             BlockPos playerPos = pContext.getPlayer().blockPosition();
@@ -65,9 +60,9 @@ public class ItemWand extends Item {
                         if (!pContext.getPlayer().isCreative()) {
                             pContext.getItemInHand().setDamageValue(pContext.getItemInHand().getDamageValue() + 1);
                         }
-                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.DEEPSLATE_TILES_BREAK, 1f, 1.85f);
-                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.CONDUIT_ACTIVATE, 1f, 0.5f);
-                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.END_PORTAL_SPAWN, 1f, 0.5f);
+                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.BELL_RESONATE, 1f, 1.25f);
+                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.BELL_RESONATE, 1f, 1.25f);
+                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.END_PORTAL_SPAWN, 0.25f, 0.5f);
                     } else {
                         clear(pContext.getItemInHand());
                         SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.AMETHYST_BLOCK_BREAK, 1f, 0.2f);

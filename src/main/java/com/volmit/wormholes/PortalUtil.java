@@ -1,7 +1,5 @@
 package com.volmit.wormholes;
 
-import com.mojang.math.Quaternion;
-import net.minecraft.client.particle.AshParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -27,20 +25,19 @@ import java.util.Set;
 public class PortalUtil {
 
     public static boolean linkPortals(Player player, ServerLevel level, Direction dir1, String dim1, Cuboid c1, Direction dir2, String dim2, Cuboid c2) {
-
         Set<BlockPos> positions1 = new HashSet<>();
         Set<BlockPos> positions2 = new HashSet<>();
         ServerLevel l1 = level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim1)));
         ServerLevel l2 = level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));
 
         for (BlockPos i : c1.getBlockPositions()) {
-            if (l1.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
+            if (l1.getBlockState(i).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
                 positions1.add(i);
             }
         }
 
         for (BlockPos i : c2.getBlockPositions()) {
-            if (l1.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
+            if (l1.getBlockState(i).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
                 positions2.add(i);
             }
         }
@@ -71,20 +68,21 @@ public class PortalUtil {
 
         PortalExtension.get(portal).bindCluster = true;
         PortalExtension.get(portal2).bindCluster = true;
+
         McHelper.spawnServerEntity(configure(portal));
         McHelper.spawnServerEntity(configure(portal2));
         McHelper.spawnServerEntity(configure(PortalManipulation.createFlippedPortal(portal, (EntityType<Portal>) portal.getType())));
         McHelper.spawnServerEntity(configure(PortalManipulation.createFlippedPortal(portal2, (EntityType<Portal>) portal2.getType())));
 
         for (BlockPos i : positions1) {
-            if (l1.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
+            if (l1.getBlockState(i).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
                 BlockState state = l1.getBlockState(i);
                 l1.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int) pos1.x(), (int) pos1.y(), (int) pos1.z()), i, state));
             }
         }
 
         for (BlockPos i : positions2) {
-            if (l2.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
+            if (l2.getBlockState(i).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
                 BlockState state = l2.getBlockState(i);
                 l2.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int) pos2.x(), (int) pos2.y(), (int) pos2.z()), i, state));
             }

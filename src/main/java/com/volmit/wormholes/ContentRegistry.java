@@ -1,7 +1,5 @@
 package com.volmit.wormholes;
 
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
 import com.volmit.WormholesMod;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -14,7 +12,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class Content {
+public class ContentRegistry {
     public static final CreativeModeTab TAB = new CreativeModeTab("wormholes") {
         @Override
         public ItemStack makeIcon() {
@@ -37,9 +35,9 @@ public class Content {
         public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, WormholesMod.MOD_ID);
 
         public static final RegistryObject<Item> WAND = ITEMS.register("wand",
-                () -> new ItemWand(new Item.Properties().tab(Content.TAB)));
+                () -> new ItemWand(new Item.Properties().tab(ContentRegistry.TAB)));
 
-        public static final RegistryObject<Item> FRAME = ITEMS.register("frame",
-                () -> new BlockItem(Blocks.FRAME.get(), new Item.Properties().tab(Content.TAB)));
+//        public static final RegistryObject<Item> FRAME = ITEMS.register("frame",
+//                () -> new BlockItem(Blocks.FRAME.get(), new Item.Properties().tab(ContentRegistry.TAB)));
     }
 }

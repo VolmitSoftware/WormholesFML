@@ -94,7 +94,7 @@ public class Framer {
                 return false;
             }
 
-            if (!level.getBlockState(i).getBlock().equals(Content.Blocks.FRAME.get())) {
+            if (!level.getBlockState(i).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
                 System.out.println("NOT FRAME " + a);
                 return false;
             }
@@ -113,7 +113,7 @@ public class Framer {
         for (BlockPos i : check) {
             BlockPos o = p.offset(i);
             if (!positionsFound.contains(o)) {
-                if (level.getBlockState(o).getBlock().equals(Content.Blocks.FRAME.get())) {
+                if (level.getBlockState(o).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
                     positionsFound.add(o);
                     tick(o, max - 1);
                 }

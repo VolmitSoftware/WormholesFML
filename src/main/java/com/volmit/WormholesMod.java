@@ -1,7 +1,7 @@
 package com.volmit;
 
 import com.mojang.logging.LogUtils;
-import com.volmit.wormholes.Content;
+import com.volmit.wormholes.ContentRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,8 +16,8 @@ public class WormholesMod {
 
     public WormholesMod() {
         MinecraftForge.EVENT_BUS.register(this);
-        Content.Blocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        Content.Items.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ContentRegistry.Blocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ContentRegistry.Items.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent
