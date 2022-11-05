@@ -74,8 +74,8 @@ public class FrameBlock extends Block {
         });
 
         if(removed.get()) {
-            SoundUtil.play(level, new AABB(id).getCenter(), SoundEvents.CONDUIT_ACTIVATE, 1f, 0.75f);
-            SoundUtil.play(level, new AABB(id).getCenter(), SoundEvents.CONDUIT_DEACTIVATE, 1f, 1.25f);
+            SoundUtil.play(level, new AABB(id).getCenter(), SoundEvents.IRON_GOLEM_DEATH, 1f, 0.25f);
+            SoundUtil.play(level, new AABB(id).getCenter(), SoundEvents.CONDUIT_DEACTIVATE, 1f, 0.25f);
         }
     }
 
