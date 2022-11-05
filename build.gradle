@@ -12,6 +12,7 @@ buildscript {
 plugins {
     id 'eclipse'
     id 'maven-publish'
+    id "io.freefair.lombok" version "6.3.0"
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
@@ -96,8 +97,12 @@ repositories {
 }
 
 dependencies {
+    // Provided or Classpath
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
     minecraft 'net.minecraftforge:forge:1.18.2-40.1.84'
     implementation fg.deobf('qouteall.q_misc_util:immersive-portals:1.4.12')
+
 }
 
 jar {
