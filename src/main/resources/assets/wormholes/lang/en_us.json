@@ -5,6 +5,17 @@
   "block.wormholes.frame_brown": "Wormhole Gateway",
   "block.wormholes.frame_red": "Wormhole Gateway",
   "block.wormholes.frame_green": "Wormhole Gateway",
+  "block.wormholes.frame_cyan": "Wormhole Gateway",
+  "block.wormholes.frame_gray": "Wormhole Gateway",
+  "block.wormholes.frame_light_blue": "Wormhole Gateway",
+  "block.wormholes.frame_light_gray": "Wormhole Gateway",
+  "block.wormholes.frame_lime": "Wormhole Gateway",
+  "block.wormholes.frame_magenta": "Wormhole Gateway",
+  "block.wormholes.frame_orange": "Wormhole Gateway",
+  "block.wormholes.frame_pink": "Wormhole Gateway",
+  "block.wormholes.frame_white": "Wormhole Gateway",
+  "block.wormholes.frame_yellow": "Wormhole Gateway",
+
   "itemGroup.wormholes": "Wormholes",
   "item.wormholes.wand": "Hole Applicator"
 }

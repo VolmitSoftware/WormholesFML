@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FFF",
+    "FDF",
+    "FFF"
+  ],
+  "key": {
+    "D": {
+      "tag": "forge:dyes/cyan"
+    },
+    "F": {
+      "tag": "wormholes:frame"
+    }
+  },
+  "result": {
+    "item": "wormholes:frame_cyan",
+    "count": 8
+  }
+}
