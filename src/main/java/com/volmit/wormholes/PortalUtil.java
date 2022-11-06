@@ -77,14 +77,14 @@ public class PortalUtil {
         for (BlockPos i : positions1) {
             if (ContentRegistry.blockList().contains(l1.getBlockState(i).getBlock())) {
                 BlockState state = l1.getBlockState(i);
-                l1.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int) pos1.x(), (int) pos1.y(), (int) pos1.z()), i, state));
+                l1.setBlockAndUpdate(i, FrameBlock.linkPortal(ItemWand.computeDirection(i, new BlockPos((int) pos1.x(), (int) pos1.y(), (int) pos1.z()), null), state));
             }
         }
 
         for (BlockPos i : positions2) {
             if (ContentRegistry.blockList().contains(l2.getBlockState(i).getBlock())) {
                 BlockState state = l2.getBlockState(i);
-                l2.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int) pos2.x(), (int) pos2.y(), (int) pos2.z()), i, state));
+                l2.setBlockAndUpdate(i, FrameBlock.linkPortal(ItemWand.computeDirection(i, new BlockPos((int) pos2.x(), (int) pos2.y(), (int) pos2.z()), null), state));
             }
         }
 

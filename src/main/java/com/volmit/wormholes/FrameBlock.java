@@ -2,6 +2,7 @@ package com.volmit.wormholes;
 
 import com.volmit.util.SoundUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
@@ -10,6 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.AABB;
 import qouteall.imm_ptl.core.portal.Portal;
@@ -19,18 +21,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FrameBlock extends Block {
     public static final int MAX_PORTAL_RADIUS = 6;
-    public static final BooleanProperty FRAME_USE = BooleanProperty.create("worm");
-    public static final IntegerProperty FRAME_REL_X = IntegerProperty.create("wormx", 0, (MAX_PORTAL_RADIUS * 2) + 1);
-    public static final IntegerProperty FRAME_REL_Y = IntegerProperty.create("wormy", 0, (MAX_PORTAL_RADIUS * 2) + 1);
-    public static final IntegerProperty FRAME_REL_Z = IntegerProperty.create("wormz", 0, (MAX_PORTAL_RADIUS * 2) + 1);
+    public static final DirectionProperty FRAME_INNER = DirectionProperty.create("wormdir");
+    public static final BooleanProperty FRAME_ACTIVE = BooleanProperty.create("wormset");
 
     public FrameBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FRAME_USE, false)
-                .setValue(FRAME_REL_X, MAX_PORTAL_RADIUS)
-                .setValue(FRAME_REL_Y, MAX_PORTAL_RADIUS)
-                .setValue(FRAME_REL_Z, MAX_PORTAL_RADIUS));
+                .setValue(FRAME_INNER, Direction.UP)
+                .setValue(FRAME_ACTIVE, false));
     }
 
     public static int sign(int i) {
@@ -42,21 +40,18 @@ public class FrameBlock extends Block {
     }
 
     public static boolean isLinked(BlockState state) {
-        return state.getValue(FRAME_USE);
+        return state.getValue(FRAME_ACTIVE);
     }
 
     public static BlockPos getLinkedPortal(BlockPos p, BlockState b) {
         return new BlockPos(
-                p.getX() + sign(b.getValue(FRAME_REL_X)),
-                p.getY() + sign(b.getValue(FRAME_REL_Y)),
-                p.getZ() + sign(b.getValue(FRAME_REL_Z)));
+                p.getX() + b.getValue(FRAME_INNER).getStepX(),
+                p.getY() + b.getValue(FRAME_INNER).getStepY(),
+                p.getZ() + b.getValue(FRAME_INNER).getStepZ());
     }
 
-    public static BlockState linkPortal(BlockPos portalPos, BlockPos blockPos, BlockState state) {
-        return state.setValue(FRAME_REL_X, unsign(portalPos.getX() - blockPos.getX()))
-                .setValue(FRAME_REL_Y, unsign(portalPos.getY() - blockPos.getY()))
-                .setValue(FRAME_REL_Z, unsign(portalPos.getZ() - blockPos.getZ()))
-                .setValue(FRAME_USE, true);
+    public static BlockState linkPortal(Direction dir, BlockState state) {
+        return state.setValue(FRAME_ACTIVE, true).setValue(FRAME_INNER, dir);
     }
 
     public static void breakCheckLogic(ServerLevel level, BlockPos pos, BlockState state) {
@@ -80,7 +75,7 @@ public class FrameBlock extends Block {
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FRAME_REL_X, FRAME_REL_Y, FRAME_REL_Z, FRAME_USE);
+        builder.add(FRAME_ACTIVE, FRAME_INNER);
     }
 
     @Override

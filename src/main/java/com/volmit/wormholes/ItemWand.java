@@ -13,6 +13,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -94,10 +95,12 @@ public class ItemWand extends Item {
         return stack.getOrCreateTag().getString("wormholesdim");
     }
 
-    public Direction computeDirection(BlockPos point, BlockPos toward, Cuboid cc) {
+    public static Direction computeDirection(BlockPos point, BlockPos toward, Cuboid cc) {
         Set<Direction> allowed = new HashSet<>();
 
-        if (cc.getSizeY() == 1) {
+        if(cc == null) {
+            allowed.addAll(Arrays.stream(Direction.values()).toList());
+        }else if (cc.getSizeY() == 1) {
             allowed.add(Direction.UP);
             allowed.add(Direction.DOWN);
         } else if (cc.getSizeX() == 1) {
