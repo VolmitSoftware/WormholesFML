@@ -1,6 +1,11 @@
 {
   "replace": false,
   "values": [
-    "wormholes:frame"
+    "wormholes:frame",
+    "wormholes:frame_black",
+    "wormholes:frame_blue",
+    "wormholes:frame_brown",
+    "wormholes:frame_fuchsia",
+    "wormholes:frame_lime"
   ]
 }
