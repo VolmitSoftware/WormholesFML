@@ -169,6 +169,8 @@ public class ContentRegistry {
                 () -> new BlockItem(Blocks.FRAME_WHITE.get(), new Item.Properties().tab(ContentRegistry.TAB)));
         public static final RegistryObject<Item> FRAME_YELLOW = ITEMS.register("frame_yellow",
                 () -> new BlockItem(Blocks.FRAME_YELLOW.get(), new Item.Properties().tab(ContentRegistry.TAB)));
+        public static final RegistryObject<Item> FRAME_GREEN = ITEMS.register("frame_green",
+                () -> new BlockItem(Blocks.FRAME_GREEN.get(), new Item.Properties().tab(ContentRegistry.TAB)));
 
     }
 }
