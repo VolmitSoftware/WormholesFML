@@ -1,5 +1,10 @@
 {
   "block.wormholes.frame": "Wormhole Gateway",
+  "block.wormholes.frame_black": "Wormhole Gateway",
+  "block.wormholes.frame_blue": "Wormhole Gateway",
+  "block.wormholes.frame_brown": "Wormhole Gateway",
+  "block.wormholes.frame_fuchsia": "Wormhole Gateway",
+  "block.wormholes.frame_lime": "Wormhole Gateway",
   "itemGroup.wormholes": "Wormholes",
   "item.wormholes.wand": "Hole Applicator"
 }
