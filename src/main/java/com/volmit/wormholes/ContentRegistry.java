@@ -27,7 +27,7 @@ public class ContentRegistry {
 
     @Getter
     public static List<Block> blockList() {
-        return List.of(FRAME.get(), FRAME_BLACK.get(), FRAME_BLUE.get(), FRAME_BROWN.get(), FRAME_FUCHSIA.get(), FRAME_LIME.get());
+        return List.of(FRAME.get(), FRAME_BLACK.get(), FRAME_BLUE.get(), FRAME_BROWN.get(), FRAME_RED.get(), FRAME_GREEN.get());
     }
 
     public static class Blocks {
@@ -58,13 +58,13 @@ public class ContentRegistry {
                         .requiresCorrectToolForDrops()
                         .sound(SoundType.DEEPSLATE_TILES)
                         .emissiveRendering((__, ___, ____) -> true)));
-        public static final RegistryObject<Block> FRAME_FUCHSIA = BLOCKS.register("frame_fuchsia",
+        public static final RegistryObject<Block> FRAME_RED = BLOCKS.register("frame_red",
                 () -> new FrameBlock(Block.Properties.of(Material.STONE)
                         .strength(4f, 1200f)
                         .requiresCorrectToolForDrops()
                         .sound(SoundType.DEEPSLATE_TILES)
                         .emissiveRendering((__, ___, ____) -> true)));
-        public static final RegistryObject<Block> FRAME_LIME = BLOCKS.register("frame_lime",
+        public static final RegistryObject<Block> FRAME_GREEN = BLOCKS.register("frame_green",
                 () -> new FrameBlock(Block.Properties.of(Material.STONE)
                         .strength(4f, 1200f)
                         .requiresCorrectToolForDrops()
@@ -88,9 +88,9 @@ public class ContentRegistry {
                 () -> new BlockItem(Blocks.FRAME_BLUE.get(), new Item.Properties().tab(ContentRegistry.TAB)));
         public static final RegistryObject<Item> FRAME_BROWN = ITEMS.register("frame_brown",
                 () -> new BlockItem(Blocks.FRAME_BROWN.get(), new Item.Properties().tab(ContentRegistry.TAB)));
-        public static final RegistryObject<Item> FRAME_FUCHSIA = ITEMS.register("frame_fuchsia",
-                () -> new BlockItem(Blocks.FRAME_FUCHSIA.get(), new Item.Properties().tab(ContentRegistry.TAB)));
-        public static final RegistryObject<Item> FRAME_LIME = ITEMS.register("frame_lime",
-                () -> new BlockItem(Blocks.FRAME_LIME.get(), new Item.Properties().tab(ContentRegistry.TAB)));
+        public static final RegistryObject<Item> FRAME_FUCHSIA = ITEMS.register("frame_red",
+                () -> new BlockItem(Blocks.FRAME_RED.get(), new Item.Properties().tab(ContentRegistry.TAB)));
+        public static final RegistryObject<Item> FRAME_LIME = ITEMS.register("frame_green",
+                () -> new BlockItem(Blocks.FRAME_GREEN.get(), new Item.Properties().tab(ContentRegistry.TAB)));
     }
 }
