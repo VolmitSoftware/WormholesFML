@@ -91,19 +91,18 @@ public class PortalUtil {
         return true;
     }
 
-    private static Portal configure(Portal p)
-    {
+    private static Portal configure(Portal p) {
         return p;
     }
 
     private static DQuaternion getQuaternion(Vec3 angle1, Vec3 angle2, boolean flip) {
-        if(flip) {
+        if (flip) {
             return DQuaternion.identity; //  DQuaternion.rotationByDegrees(angle1, 180);
         }
 
         Vec3 cross = angle1.cross(angle2);
         return new DQuaternion(cross.x(), cross.y(), cross.z(), Math.sqrt(
-            (angle1.lengthSqr() * angle2.lengthSqr()) + angle1.dot(angle2)
+                (angle1.lengthSqr() * angle2.lengthSqr()) + angle1.dot(angle2)
         )).getNormalized();
     }
 

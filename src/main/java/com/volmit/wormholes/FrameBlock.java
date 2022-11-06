@@ -27,8 +27,8 @@ public class FrameBlock extends Block {
     public FrameBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
-            .setValue(FRAME_USE, false)
-            .setValue(FRAME_REL_X, MAX_PORTAL_RADIUS)
+                .setValue(FRAME_USE, false)
+                .setValue(FRAME_REL_X, MAX_PORTAL_RADIUS)
                 .setValue(FRAME_REL_Y, MAX_PORTAL_RADIUS)
                 .setValue(FRAME_REL_Z, MAX_PORTAL_RADIUS));
     }
@@ -56,11 +56,11 @@ public class FrameBlock extends Block {
         return state.setValue(FRAME_REL_X, unsign(portalPos.getX() - blockPos.getX()))
                 .setValue(FRAME_REL_Y, unsign(portalPos.getY() - blockPos.getY()))
                 .setValue(FRAME_REL_Z, unsign(portalPos.getZ() - blockPos.getZ()))
-            .setValue(FRAME_USE, true);
+                .setValue(FRAME_USE, true);
     }
 
     public static void breakCheckLogic(ServerLevel level, BlockPos pos, BlockState state) {
-        if(!isLinked(state)) {
+        if (!isLinked(state)) {
             return;
         }
 
@@ -73,7 +73,7 @@ public class FrameBlock extends Block {
             e.remove(Entity.RemovalReason.KILLED);
         });
 
-        if(removed.get()) {
+        if (removed.get()) {
             SoundUtil.play(level, new AABB(id).getCenter(), SoundEvents.IRON_GOLEM_DEATH, 0.25f, 0.25f);
             SoundUtil.play(level, new AABB(id).getCenter(), SoundEvents.CONDUIT_DEACTIVATE, 1f, 0.25f);
         }

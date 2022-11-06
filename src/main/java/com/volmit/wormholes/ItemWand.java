@@ -36,10 +36,10 @@ public class ItemWand extends Item {
 
         pContext.getPlayer().getCooldowns().addCooldown(this, 5);
         if (pContext.getPlayer().isCrouching()) {
-            pContext.getPlayer().displayClientMessage(new TextComponent("Cleared Context Reference"), true);
+            pContext.getPlayer().displayClientMessage(new TextComponent("Hole Applicator Cleared."), true);
             clear(pContext.getItemInHand());
             SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.AMETHYST_BLOCK_BREAK, 1f, 0.5f);
-            SoundUtil.play((ServerLevel) pContext.getLevel(),pContext.getPlayer().position(), SoundEvents.DEEPSLATE_BREAK, 1f, 0.8f);
+            SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.DEEPSLATE_BREAK, 1f, 0.8f);
             return super.useOn(pContext);
         }
 
@@ -54,7 +54,7 @@ public class ItemWand extends Item {
                 if (hasData(pContext.getItemInHand())) {
                     if (PortalUtil.linkPortals(pContext.getPlayer(), (ServerLevel) pContext.getLevel(), getDirection(pContext.getItemInHand()), getDimension(pContext.getItemInHand()),
                             getCuboid(pContext.getItemInHand()), computeDirection(playerPos, c.getCenter(), c), pContext.getLevel().dimension().location().toString(), c.clone())) {
-                        pContext.getPlayer().displayClientMessage(new TextComponent("Linked!"), true);
+                        pContext.getPlayer().displayClientMessage(new TextComponent("Gateway Created!"), true);
 
                         clear(pContext.getItemInHand());
                         if (!pContext.getPlayer().isCreative()) {
@@ -70,7 +70,7 @@ public class ItemWand extends Item {
                     return super.useOn(pContext);
                 }
 
-                pContext.getPlayer().displayClientMessage(new TextComponent("Set Context Point"), true);
+                pContext.getPlayer().displayClientMessage(new TextComponent("First Portal Frame Bound!"), true);
                 setCuboid(pContext.getItemInHand(), c);
                 setDimension(pContext.getItemInHand(), pContext.getLevel().dimension().location().toString());
                 setDirection(pContext.getItemInHand(), computeDirection(playerPos, c.getCenter(), c));
@@ -97,13 +97,13 @@ public class ItemWand extends Item {
     public Direction computeDirection(BlockPos point, BlockPos toward, Cuboid cc) {
         Set<Direction> allowed = new HashSet<>();
 
-        if(cc.getSizeY() == 1) {
+        if (cc.getSizeY() == 1) {
             allowed.add(Direction.UP);
             allowed.add(Direction.DOWN);
-        } else if(cc.getSizeX() == 1) {
+        } else if (cc.getSizeX() == 1) {
             allowed.add(Direction.EAST);
             allowed.add(Direction.WEST);
-        } else if(cc.getSizeZ() == 1) {
+        } else if (cc.getSizeZ() == 1) {
             allowed.add(Direction.NORTH);
             allowed.add(Direction.SOUTH);
         }

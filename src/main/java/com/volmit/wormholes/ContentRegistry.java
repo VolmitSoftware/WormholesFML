@@ -25,6 +25,11 @@ public class ContentRegistry {
         }
     };
 
+    @Getter
+    public static List<Block> blockList() {
+        return List.of(FRAME.get(), FRAME_BLACK.get(), FRAME_BLUE.get(), FRAME_BROWN.get(), FRAME_FUCHSIA.get(), FRAME_LIME.get());
+    }
+
     public static class Blocks {
         public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, WormholesMod.MOD_ID);
 
@@ -87,11 +92,5 @@ public class ContentRegistry {
                 () -> new BlockItem(Blocks.FRAME_FUCHSIA.get(), new Item.Properties().tab(ContentRegistry.TAB)));
         public static final RegistryObject<Item> FRAME_LIME = ITEMS.register("frame_lime",
                 () -> new BlockItem(Blocks.FRAME_LIME.get(), new Item.Properties().tab(ContentRegistry.TAB)));
-    }
-
-
-    @Getter
-    public static List<Block> blockList() {
-        return List.of(FRAME.get(), FRAME_BLACK.get(), FRAME_BLUE.get(), FRAME_BROWN.get(), FRAME_FUCHSIA.get(), FRAME_LIME.get());
     }
 }
