@@ -45,7 +45,7 @@ public class ItemWand extends Item {
 
         BlockPos pos = pContext.getClickedPos();
 
-        if (pContext.getLevel().getBlockState(pos).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
+        if (ContentRegistry.blockList().contains(pContext.getLevel().getBlockState(pos).getBlock())) {
             Framer f = new Framer(pContext.getLevel(), pos);
             Cuboid c = f.validate();
             BlockPos playerPos = pContext.getPlayer().blockPosition();

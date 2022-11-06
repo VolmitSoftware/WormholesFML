@@ -91,7 +91,7 @@ public class ContentRegistry {
 
 
     @Getter
-    public static List<RegistryObject<Block>> blockList() {
-        return List.of(FRAME, FRAME_BLACK, FRAME_BLUE, FRAME_BROWN, FRAME_FUCHSIA, FRAME_LIME);
+    public static List<Block> blockList() {
+        return List.of(FRAME.get(), FRAME_BLACK.get(), FRAME_BLUE.get(), FRAME_BROWN.get(), FRAME_FUCHSIA.get(), FRAME_LIME.get());
     }
 }

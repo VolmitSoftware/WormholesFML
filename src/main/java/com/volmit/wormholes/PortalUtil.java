@@ -31,13 +31,13 @@ public class PortalUtil {
         ServerLevel l2 = level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dim2)));
 
         for (BlockPos i : c1.getBlockPositions()) {
-            if (l1.getBlockState(i).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
+            if (ContentRegistry.blockList().contains(l1.getBlockState(i).getBlock())) {
                 positions1.add(i);
             }
         }
 
         for (BlockPos i : c2.getBlockPositions()) {
-            if (l1.getBlockState(i).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
+            if (ContentRegistry.blockList().contains(l1.getBlockState(i).getBlock())) {
                 positions2.add(i);
             }
         }
@@ -75,14 +75,14 @@ public class PortalUtil {
         McHelper.spawnServerEntity(configure(PortalManipulation.createFlippedPortal(portal2, (EntityType<Portal>) portal2.getType())));
 
         for (BlockPos i : positions1) {
-            if (l1.getBlockState(i).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
+            if (ContentRegistry.blockList().contains(l1.getBlockState(i).getBlock())) {
                 BlockState state = l1.getBlockState(i);
                 l1.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int) pos1.x(), (int) pos1.y(), (int) pos1.z()), i, state));
             }
         }
 
         for (BlockPos i : positions2) {
-            if (l2.getBlockState(i).getBlock().equals(ContentRegistry.Blocks.FRAME.get())) {
+            if (ContentRegistry.blockList().contains(l2.getBlockState(i).getBlock())) {
                 BlockState state = l2.getBlockState(i);
                 l2.setBlockAndUpdate(i, FrameBlock.linkPortal(new BlockPos((int) pos2.x(), (int) pos2.y(), (int) pos2.z()), i, state));
             }
