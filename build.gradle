@@ -18,7 +18,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 
-version = '0.1.0-1.18.2-FORGE'
+version = '0.1.1-1.18.2-FORGE'
 group = 'com.volmit.wormholes'
 archivesBaseName = 'wormholes'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
