@@ -1,20 +1,32 @@
 package com.volmit.wormholes;
 
 import com.volmit.util.SoundUtil;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import qouteall.imm_ptl.core.portal.Portal;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class ItemWand extends Item {
@@ -30,8 +42,51 @@ public class ItemWand extends Item {
     }
 
     @Override
+    public @NotNull InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        if (pLevel.isClientSide()) {
+            return super.use(pLevel, pPlayer, pUsedHand);
+        }
+        if (pPlayer.isCrouching() && getNearestEntity(pPlayer).getEntity() instanceof Portal) {
+//            List<Portal> portals = PortalManipulation.getPortalCluster(pLevel, pPortal.getOriginPos(), pPortal.getNormal(), p -> true);
+//            for (Portal portal : portals) {
+//                Quaternion q = new Quaternion(0, 180, 0, true);
+//                portal.axisW = RotationHelper.getRotated(q, portal.axisW);
+//                portal.axisH = RotationHelper.getRotated(q, portal.axisH);
+//                portal.reloadAndSyncToClient();
+//            }
+//              Bad code, but it works. The api that's exposed for the code above is broken, and does not attach to respected portals. this does the same thing but for whatever reason works.
+            if (pLevel.getServer() != null && pPlayer.getLevel().getServer() != null) {
+
+                System.out.println("Rotating portal: " + pPlayer.getLookAngle().get(Direction.Axis.Y));
+                double yaw = pPlayer.getLookAngle().get(Direction.Axis.Y) * 100;
+
+                if (yaw > 75 || yaw < -75) {
+                    System.out.println("Rotating portal on the X axis");
+                    pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal rotate_portal_rotation_along x 180");
+                    SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.CHEST_CLOSE, 1f, 3.25f);
+                } else {
+                    System.out.println("Rotating portal on the Z axis");
+                    pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal rotate_portal_rotation_along y 180");
+                    SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.CHEST_CLOSE, 1f, 3.25f);
+                }
+            }
+
+        }
+        return super.use(pLevel, pPlayer, pUsedHand);
+    }
+
+
+    @Override
     public InteractionResult useOn(UseOnContext pContext) {
         if (pContext.getLevel().isClientSide()) {
+            return super.useOn(pContext);
+        }
+
+        if (pContext.getPlayer() == null) {
+            return super.useOn(pContext);
+        }
+
+        if (getNearestEntity(pContext.getPlayer()).getEntity() instanceof Portal) {
             return super.useOn(pContext);
         }
 
@@ -61,7 +116,7 @@ public class ItemWand extends Item {
                         if (!pContext.getPlayer().isCreative()) {
                             pContext.getItemInHand().setDamageValue(pContext.getItemInHand().getDamageValue() + 1);
                         }
-                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.BELL_RESONATE, 1f, 1.25f);
+                        SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.BELL_RESONATE, 1f, 0.9f);
                         SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.BELL_RESONATE, 1f, 1.25f);
                         SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.END_PORTAL_SPAWN, 0.25f, 0.5f);
                     } else {
@@ -98,9 +153,9 @@ public class ItemWand extends Item {
     public static Direction computeDirection(BlockPos point, BlockPos toward, Cuboid cc) {
         Set<Direction> allowed = new HashSet<>();
 
-        if(cc == null) {
+        if (cc == null) {
             allowed.addAll(Arrays.stream(Direction.values()).toList());
-        }else if (cc.getSizeY() == 1) {
+        } else if (cc.getSizeY() == 1) {
             allowed.add(Direction.UP);
             allowed.add(Direction.DOWN);
         } else if (cc.getSizeX() == 1) {
@@ -154,6 +209,54 @@ public class ItemWand extends Item {
                 c.getUpperY(),
                 c.getUpperZ(),
         });
+    }
+
+    @NotNull
+    public static EntityHitResult getNearestEntity(Player player) {
+        float playerRotX = player.getXRot();
+        float playerRotY = player.getYRot();
+        Vec3 startPos = player.getEyePosition();
+        float f2 = Mth.cos(-playerRotY * ((float) Math.PI / 180F) - (float) Math.PI);
+        float f3 = Mth.sin(-playerRotY * ((float) Math.PI / 180F) - (float) Math.PI);
+        float f4 = -Mth.cos(-playerRotX * ((float) Math.PI / 180F));
+        float additionY = Mth.sin(-playerRotX * ((float) Math.PI / 180F));
+        float additionX = f3 * f4;
+        float additionZ = f2 * f4;
+        double d0 = 15;
+        Vec3 endVec = startPos.add((double) additionX * d0, (double) additionY * d0, (double) additionZ * d0);
+        AABB startEndBox = new AABB(startPos, endVec);
+        Entity entity = player;
+        for (Entity entity1 : player.level.getEntities(player, startEndBox, (val) -> true)) {
+            AABB aabb = entity1.getBoundingBox().inflate(entity1.getPickRadius());
+            Optional<Vec3> optional = aabb.clip(startPos, endVec);
+            if (aabb.contains(startPos)) {
+                if (d0 >= 0.0D) {
+                    entity = entity1;
+                    startPos = optional.orElse(startPos);
+                    d0 = 0.0D;
+                }
+            } else if (optional.isPresent()) {
+                Vec3 vec31 = optional.get();
+                double d1 = startPos.distanceToSqr(vec31);
+                if (d1 < d0 || d0 == 0.0D) {
+                    if (entity1.getRootVehicle() == player.getRootVehicle() && !entity1.canRiderInteract()) {
+                        if (d0 == 0.0D) {
+                            entity = entity1;
+                            startPos = vec31;
+                        }
+                    } else {
+                        entity = entity1;
+                        startPos = vec31;
+                        d0 = d1;
+                    }
+                }
+            }
+        }
+        if (entity == player) {
+            return new EntityHitResult(player);
+        } else {
+            return new EntityHitResult(entity);
+        }
     }
 
     public Cuboid getCuboid(ItemStack item) {

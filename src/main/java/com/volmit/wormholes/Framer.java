@@ -81,9 +81,7 @@ public class Framer {
     }
 
     private boolean isValid(Cuboid frame, String a) {
-        if (
-                Math.max(frame.getSizeX(), Math.max(frame.getSizeY(), frame.getSizeZ())) != frame.volume()
-        ) {
+        if (Math.max(frame.getSizeX(), Math.max(frame.getSizeY(), frame.getSizeZ())) != frame.volume()) {
             System.out.println("Invalid size on " + a + " " + frame.getSizeX() + " " + frame.getSizeY() + " " + frame.getSizeZ());
             return false;
         }
