@@ -1,4 +1,4 @@
-package com.volmit.wormholes;
+package com.volmit.wormholes.utils;
 
 import net.minecraft.core.BlockPos;
 

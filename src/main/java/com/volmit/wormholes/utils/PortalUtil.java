@@ -1,5 +1,8 @@
-package com.volmit.wormholes;
+package com.volmit.wormholes.utils;
 
+import com.volmit.wormholes.content.ContentRegistry;
+import com.volmit.wormholes.content.FrameBlock;
+import com.volmit.wormholes.content.ItemWand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;

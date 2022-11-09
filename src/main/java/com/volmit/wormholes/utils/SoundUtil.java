@@ -1,4 +1,4 @@
-package com.volmit.util;
+package com.volmit.wormholes.utils;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;

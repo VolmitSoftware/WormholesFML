@@ -1,6 +1,6 @@
-package com.volmit.wormholes;
+package com.volmit.wormholes.content;
 
-import com.volmit.util.SoundUtil;
+import com.volmit.wormholes.utils.SoundUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

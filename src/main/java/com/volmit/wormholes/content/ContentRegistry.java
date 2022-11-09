@@ -1,6 +1,6 @@
-package com.volmit.wormholes;
+package com.volmit.wormholes.content;
 
-import com.volmit.WormholesMod;
+import com.volmit.Wormholes;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -15,7 +15,7 @@ import org.openjdk.nashorn.internal.objects.annotations.Getter;
 
 import java.util.List;
 
-import static com.volmit.wormholes.ContentRegistry.Blocks.*;
+import static com.volmit.wormholes.content.ContentRegistry.Blocks.*;
 
 public class ContentRegistry {
     public static final CreativeModeTab TAB = new CreativeModeTab("wormholes") {
@@ -31,7 +31,7 @@ public class ContentRegistry {
     }
 
     public static class Blocks {
-        public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, WormholesMod.MOD_ID);
+        public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Wormholes.MOD_ID);
 
         public static final RegistryObject<Block> FRAME = BLOCKS.register("frame",
                 () -> new FrameBlock(Block.Properties.of(Material.STONE)
@@ -132,7 +132,7 @@ public class ContentRegistry {
     }
 
     public static class Items {
-        public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, WormholesMod.MOD_ID);
+        public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Wormholes.MOD_ID);
         //WANDS
         public static final RegistryObject<Item> WAND = ITEMS.register("wand",
                 () -> new ItemWand(new Item.Properties().tab(ContentRegistry.TAB)));
