@@ -1,6 +1,8 @@
 # Wormholes - Immersive Portals Addon (FORGE)
-This is the Forge Variant of the mod If you want FABRIC go Here:
-https://github.com/VolmitSoftware/WormholesFabric
+
+#### This is the Forge Variant of the mod If you want FABRIC go Here:
+#### https://github.com/VolmitSoftware/WormholesFabric
+
 --------------------
 ### This is **Wormholes**
 
@@ -23,7 +25,6 @@ Wormholes is a recreation of the Spigot plugin Wormholes but now using the **Imm
 [MOD] [https://www.curseforge.com/minecraft/mc-mods/immersive-portals-mod](https://www.curseforge.com/minecraft/mc-mods/immersive-portals-mod)  
 [Fabric API] [https://www.curseforge.com/minecraft/mc-mods/fabric-api](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
 
-
 #### Forge Notes:
 ##### You will Need The Immersive Portals Mod and all its Dependencies Here:
 [MOD] https://www.curseforge.com/minecraft/mc-mods/immersive-portals-for-forge&nbsp;
@@ -37,14 +38,10 @@ About the Frames: Please note that this was built with odd frames intended, (1,3
   ![](https://i.imgur.com/aaFHjxQ.png)
 --------------------
 ### **How to Avoid Problems:**
-
 - Use "Even Frames"
 - Look Directly at your portal (Your facing Direction is important)
-
 - Be on Latest.
-
 ### **Need any Help?**
-
 - Join the ImmersivePortals [Discord](https://discord.gg/BZxgURK), (Please note that the Discord is not for **MY** mods, so please dont ask anyone other than me for help.)
 - Ask in the comments here. I'll reply eventually
 
