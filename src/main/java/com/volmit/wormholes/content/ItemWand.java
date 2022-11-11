@@ -50,17 +50,9 @@ public class ItemWand extends Item {
             return super.use(pLevel, pPlayer, pUsedHand);
         }
         if (pPlayer.isCrouching() && getNearestEntity(pPlayer).getEntity() instanceof Portal p) {
-            final Level[] level = new Level[1];
             if (pLevel.getServer() != null && pPlayer.getLevel().getServer() != null) {
 
-                pPlayer.getServer().levelKeys().forEach((s) -> {
-                    if (s.location().toString().contains("wormholes:void")) {
-                        System.out.println("Found valid void dimension");
-                        level[0] = pPlayer.getServer().getLevel(s);
-                    }
-                });
-
-                if (p.getDestDim().location().getNamespace().contains("wormholes")) {
+                if (p.getDestDim().location().getNamespace().contains("wormholes") || p.getOriginDim().location().getNamespace().contains("wormholes")) {
                     SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.ENDER_CHEST_OPEN, 1f, 3.25f);
                     return super.use(pLevel, pPlayer, pUsedHand);
                 }
