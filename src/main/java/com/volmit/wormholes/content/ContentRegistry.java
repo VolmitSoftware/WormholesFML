@@ -17,8 +17,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.openjdk.nashorn.internal.objects.annotations.Getter;
+import qouteall.q_misc_util.dimension.DimensionIdManagement;
 
-import java.awt.*;
 import java.util.List;
 
 import static com.volmit.wormholes.content.ContentRegistry.Blocks.*;
@@ -185,9 +185,14 @@ public class ContentRegistry {
 
     }
 
-    public static class ModDImensions {
+    public static class Dimensions {
         public static final ResourceKey<Level> VOID_KEY = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(Wormholes.MOD_ID, "void"));
         public static final ResourceKey<DimensionType> VOID_TYPE = ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, VOID_KEY.getRegistryName());
+
+        public static void register()
+        {
+
+        }
     }
 
 

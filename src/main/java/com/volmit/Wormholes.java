@@ -20,7 +20,7 @@ public class Wormholes {
         MinecraftForge.EVENT_BUS.register(this);
         ContentRegistry.Blocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ContentRegistry.Items.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-
+        ContentRegistry.Dimensions.register();
     }
 
     @SubscribeEvent
