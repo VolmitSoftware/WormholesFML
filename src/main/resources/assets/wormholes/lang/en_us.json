@@ -16,6 +16,8 @@
   "block.wormholes.frame_white": "Wormhole Gateway",
   "block.wormholes.frame_yellow": "Wormhole Gateway",
 
-  "itemGroup.wormholes": "Wormholes",
-  "item.wormholes.wand": "Hole Applicator"
+  "itemGroup.wormholes.wormholes": "Wormholes",
+  "item.wormholes.wand": "Hole Applicator",
+  "item.wormholes.portkey": "Portkey",
+  "item.wormholes.portbrick": "Portbrick"
 }

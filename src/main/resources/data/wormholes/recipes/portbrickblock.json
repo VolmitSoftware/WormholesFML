@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "item": "wormholes:frame",
+    "count": 1
+  },
+  "pattern": [
+    " BB",
+    " BB",
+    "   "
+  ],
+  "key": {
+    "B": {
+      "item": "wormholes:portbrick"
+    }
+  }
+}

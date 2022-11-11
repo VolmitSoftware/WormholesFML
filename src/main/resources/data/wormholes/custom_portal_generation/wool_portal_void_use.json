@@ -1,0 +1,18 @@
+{
+  "schema_version": "imm_ptl:v1",
+  "from": [
+    "minecraft:overworld"
+  ],
+  "space_ratio_from": 1, "space_ratio_to": 10,
+  "to": "wormholes:void",
+  "form": {
+    "type": "imm_ptl:heterogeneous",
+    "frame_block": "minecraft:wool",
+    "area_block": "minecraft:air",
+    "generate_frame_if_not_found": true
+  },
+  "trigger": {
+    "type": "imm_ptl:throw_item",
+    "item": "wormholes:portkey"
+  }
+}

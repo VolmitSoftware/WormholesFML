@@ -1,18 +1,24 @@
 package com.volmit.wormholes.content;
 
 import com.volmit.Wormholes;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.openjdk.nashorn.internal.objects.annotations.Getter;
 
+import java.awt.*;
 import java.util.List;
 
 import static com.volmit.wormholes.content.ContentRegistry.Blocks.*;
@@ -27,7 +33,7 @@ public class ContentRegistry {
 
     @Getter
     public static List<Block> blockList() {
-        return List.of(FRAME.get(), FRAME_BLACK.get(), FRAME_BLUE.get(), FRAME_BROWN.get(), FRAME_RED.get(), FRAME_GREEN.get(), FRAME_GRAY.get(), FRAME_LIGHT_BLUE.get(), FRAME_LIGHT_GRAY.get(), FRAME_LIME.get(), FRAME_MAGENTA.get(), FRAME_ORANGE.get(), FRAME_PINK.get(),  FRAME_WHITE.get(), FRAME_YELLOW.get(), FRAME_CYAN.get());
+        return List.of(FRAME.get(), FRAME_BLACK.get(), FRAME_BLUE.get(), FRAME_BROWN.get(), FRAME_RED.get(), FRAME_GREEN.get(), FRAME_GRAY.get(), FRAME_LIGHT_BLUE.get(), FRAME_LIGHT_GRAY.get(), FRAME_LIME.get(), FRAME_MAGENTA.get(), FRAME_ORANGE.get(), FRAME_PINK.get(), FRAME_WHITE.get(), FRAME_YELLOW.get(), FRAME_CYAN.get());
     }
 
     public static class Blocks {
@@ -133,8 +139,13 @@ public class ContentRegistry {
 
     public static class Items {
         public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Wormholes.MOD_ID);
-        //WANDS
+
+        //ITEMS
         public static final RegistryObject<Item> WAND = ITEMS.register("wand",
+                () -> new ItemWand(new Item.Properties().tab(ContentRegistry.TAB)));
+        public static final RegistryObject<Item> PORTKEY = ITEMS.register("portkey",
+                () -> new ItemWand(new Item.Properties().tab(ContentRegistry.TAB)));
+        public static final RegistryObject<Item> PORTBRICK = ITEMS.register("portbrick",
                 () -> new ItemWand(new Item.Properties().tab(ContentRegistry.TAB)));
 
 
@@ -173,4 +184,11 @@ public class ContentRegistry {
                 () -> new BlockItem(Blocks.FRAME_GREEN.get(), new Item.Properties().tab(ContentRegistry.TAB)));
 
     }
+
+    public static class ModDImensions {
+        public static final ResourceKey<Level> VOID_KEY = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(Wormholes.MOD_ID, "void"));
+        public static final ResourceKey<DimensionType> VOID_TYPE = ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, VOID_KEY.getRegistryName());
+    }
+
+
 }

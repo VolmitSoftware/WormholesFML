@@ -1,0 +1,12 @@
+{
+  "type": "wormholes:void",
+  "generator": {
+    "type": "wormholes:void",
+    "seed": 0,
+    "settings": "wormholes:void",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "minecraft:void"
+    }
+  }
+}
