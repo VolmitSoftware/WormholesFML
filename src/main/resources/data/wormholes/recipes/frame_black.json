@@ -1,20 +1,8 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "FFF",
-    "FDF",
-    "FFF"
-  ],
-  "key": {
-    "D": {
-      "tag": "forge:dyes/black"
-    },
-    "F": {
-      "tag": "wormholes:frame"
-    }
-  },
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [{"tag": "wormholes:frame"}, {"item": "minecraft:black_dye"}],
   "result": {
     "item": "wormholes:frame_black",
-    "count": 8
+    "count": 1
   }
 }

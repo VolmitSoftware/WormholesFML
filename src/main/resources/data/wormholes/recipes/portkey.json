@@ -1,8 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
   "result": {
-    "item": "wormholes:portbrick",
-    "count": 4
+    "item": "wormholes:portkey",
+    "count": 2
   },
   "pattern": [
     " K ",

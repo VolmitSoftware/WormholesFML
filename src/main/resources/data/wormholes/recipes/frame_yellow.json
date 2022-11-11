@@ -1,20 +1,8 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "FFF",
-    "FDF",
-    "FFF"
-  ],
-  "key": {
-    "D": {
-      "tag": "forge:dyes/yellow"
-    },
-    "F": {
-      "tag": "wormholes:frame"
-    }
-  },
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [{"tag": "wormholes:frame"}, {"item": "minecraft:yellow_dye"}],
   "result": {
     "item": "wormholes:frame_yellow",
-    "count": 8
+    "count": 1
   }
 }
