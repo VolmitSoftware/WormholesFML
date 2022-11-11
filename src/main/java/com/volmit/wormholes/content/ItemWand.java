@@ -49,26 +49,34 @@ public class ItemWand extends Item {
         if (pLevel.isClientSide()) {
             return super.use(pLevel, pPlayer, pUsedHand);
         }
-        if (pPlayer.isCrouching() && getNearestEntity(pPlayer).getEntity() instanceof Portal) {
-//            List<Portal> portals = PortalManipulation.getPortalCluster(pLevel, pPortal.getOriginPos(), pPortal.getNormal(), p -> true);
-//            for (Portal portal : portals) {
-//                Quaternion q = new Quaternion(0, 180, 0, true);
-//                portal.axisW = RotationHelper.getRotated(q, portal.axisW);
-//                portal.axisH = RotationHelper.getRotated(q, portal.axisH);
-//                portal.reloadAndSyncToClient();
-//            }
-//              Bad code, but it works. The api that's exposed for the code above is broken, and does not attach to respected portals. this does the same thing but for whatever reason works.
+        if (pPlayer.isCrouching() && getNearestEntity(pPlayer).getEntity() instanceof Portal p) {
+            final Level[] level = new Level[1];
             if (pLevel.getServer() != null && pPlayer.getLevel().getServer() != null) {
+
+                pPlayer.getServer().levelKeys().forEach((s) -> {
+                    if (s.location().toString().contains("wormholes:void")) {
+                        System.out.println("Found valid void dimension");
+                        level[0] = pPlayer.getServer().getLevel(s);
+                    }
+                });
+
+                if (p.getDestDim().location().getNamespace().contains("wormholes")) {
+                    SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.ENDER_CHEST_OPEN, 1f, 3.25f);
+                    return super.use(pLevel, pPlayer, pUsedHand);
+                }
+
 
                 System.out.println("Rotating portal: " + pPlayer.getLookAngle().get(Direction.Axis.Y));
                 double yaw = pPlayer.getLookAngle().get(Direction.Axis.Y) * 100;
 
                 if (yaw > 75 || yaw < -75) {
                     System.out.println("Rotating portal on the X axis");
+                    pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal set_portal_nbt {bindCluster:true}");
                     pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal rotate_portal_rotation_along x 180");
                     SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.CHEST_CLOSE, 1f, 3.25f);
                 } else {
                     System.out.println("Rotating portal on the Z axis");
+                    pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal set_portal_nbt {bindCluster:true}");
                     pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal rotate_portal_rotation_along y 180");
                     SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.CHEST_CLOSE, 1f, 3.25f);
                 }
