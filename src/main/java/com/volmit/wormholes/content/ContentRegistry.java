@@ -11,13 +11,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.openjdk.nashorn.internal.objects.annotations.Getter;
-import qouteall.q_misc_util.dimension.DimensionIdManagement;
 
 import java.util.List;
 
@@ -144,9 +142,9 @@ public class ContentRegistry {
         public static final RegistryObject<Item> WAND = ITEMS.register("wand",
                 () -> new ItemWand(new Item.Properties().tab(ContentRegistry.TAB)));
         public static final RegistryObject<Item> PORTKEY = ITEMS.register("portkey",
-                () -> new ItemWand(new Item.Properties().tab(ContentRegistry.TAB)));
+                () -> new Item(new Item.Properties().tab(ContentRegistry.TAB)));
         public static final RegistryObject<Item> PORTBRICK = ITEMS.register("portbrick",
-                () -> new ItemWand(new Item.Properties().tab(ContentRegistry.TAB)));
+                () -> new Item(new Item.Properties().tab(ContentRegistry.TAB)));
 
 
         //FRAMES
@@ -187,11 +185,9 @@ public class ContentRegistry {
 
     public static class Dimensions {
         public static final ResourceKey<Level> VOID_KEY = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(Wormholes.MOD_ID, "void"));
-        public static final ResourceKey<DimensionType> VOID_TYPE = ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, VOID_KEY.getRegistryName());
 
-        public static void register()
-        {
-
+        public static void register() {
+            System.out.println("Registering Void Dim");
         }
     }
 

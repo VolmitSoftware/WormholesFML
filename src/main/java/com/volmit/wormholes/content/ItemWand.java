@@ -1,9 +1,9 @@
 package com.volmit.wormholes.content;
 
-import com.volmit.wormholes.utils.SoundUtil;
 import com.volmit.wormholes.utils.Cuboid;
 import com.volmit.wormholes.utils.Framer;
 import com.volmit.wormholes.utils.PortalUtil;
+import com.volmit.wormholes.utils.SoundUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

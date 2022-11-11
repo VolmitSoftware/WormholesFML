@@ -2,7 +2,7 @@
   "type": "wormholes:void",
   "generator": {
     "type": "minecraft:noise",
-    "seed": -1709591232,
+    "seed": 1,
     "settings": {
       "sea_level": 63,
       "disable_mob_generation": true,
