@@ -142,7 +142,7 @@ public class ContentRegistry {
         public static final RegistryObject<Item> WAND = ITEMS.register("wand",
                 () -> new ItemWand(new Item.Properties().tab(ContentRegistry.TAB)));
         public static final RegistryObject<Item> PORTKEY = ITEMS.register("portkey",
-                () -> new Item(new Item.Properties().tab(ContentRegistry.TAB)));
+                () -> new ItemPortkey(new Item.Properties().tab(ContentRegistry.TAB)));
         public static final RegistryObject<Item> PORTBRICK = ITEMS.register("portbrick",
                 () -> new Item(new Item.Properties().tab(ContentRegistry.TAB)));
 

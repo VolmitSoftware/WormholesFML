@@ -1,5 +1,7 @@
 package com.volmit.wormholes.content;
 
+import com.mojang.datafixers.util.Either;
+import com.volmit.Wormholes;
 import com.volmit.wormholes.utils.Cuboid;
 import com.volmit.wormholes.utils.Framer;
 import com.volmit.wormholes.utils.PortalUtil;
@@ -24,6 +26,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import qouteall.imm_ptl.core.portal.Portal;
 
@@ -32,16 +38,27 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Wormholes.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ItemWand extends Item {
     public ItemWand(Properties properties) {
         super(properties.stacksTo(1).fireResistant()
-                .durability(86).rarity(Rarity.RARE));
+                .durability(86).rarity(Rarity.EPIC));
     }
 
     public void clear(ItemStack item) {
         item.removeTagKey("wormholesdim");
         item.removeTagKey("wormholesframe");
         item.removeTagKey("wormholesdir");
+    }
+
+
+    @SubscribeEvent
+    public static void onTooltipGather(RenderTooltipEvent.GatherComponents e) {
+        if (e.getItemStack().getItem() instanceof ItemWand) {
+            e.getTooltipElements().add(Either.left(new TextComponent("§5Right-Click§7 to select/bind a frame")));
+            e.getTooltipElements().add(Either.left(new TextComponent("§5Sneak-Right-Click§7 to rotate the portal")));
+            e.getTooltipElements().add(Either.left(new TextComponent("§7§oRotates the portal §5180°§7,§o Based on Looking Direction")));
+        }
     }
 
     @Override
@@ -57,18 +74,15 @@ public class ItemWand extends Item {
                     return super.use(pLevel, pPlayer, pUsedHand);
                 }
 
-
                 System.out.println("Rotating portal: " + pPlayer.getLookAngle().get(Direction.Axis.Y));
                 double yaw = pPlayer.getLookAngle().get(Direction.Axis.Y) * 100;
 
                 if (yaw > 75 || yaw < -75) {
                     System.out.println("Rotating portal on the X axis");
-                    pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal set_portal_nbt {bindCluster:true}");
                     pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal rotate_portal_rotation_along x 180");
                     SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.CHEST_CLOSE, 1f, 3.25f);
                 } else {
                     System.out.println("Rotating portal on the Z axis");
-                    pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal set_portal_nbt {bindCluster:true}");
                     pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal rotate_portal_rotation_along y 180");
                     SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.CHEST_CLOSE, 1f, 3.25f);
                 }

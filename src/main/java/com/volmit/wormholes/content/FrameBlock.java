@@ -60,7 +60,7 @@ public class FrameBlock extends Block {
 
         BlockPos id = getLinkedPortal(pos, state);
         AtomicBoolean removed = new AtomicBoolean(false);
-        level.getEntitiesOfClass(Portal.class, new AABB(id).inflate(0.5), (f) -> true).forEach((e) -> {
+        level.getEntitiesOfClass(Portal.class, new AABB(id).inflate(1), (f) -> true).forEach((e) -> {
             PortalManipulation.removeConnectedPortals(e, (px) -> {
             });
             removed.set(true);
