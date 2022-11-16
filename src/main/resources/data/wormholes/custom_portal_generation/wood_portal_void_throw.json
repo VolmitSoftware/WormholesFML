@@ -3,7 +3,8 @@
   "from": [
     "minecraft:overworld"
   ],
-  "space_ratio_from": 1, "space_ratio_to": 1000,
+  "space_ratio_from": 1,
+  "space_ratio_to": 1000,
   "to": "wormholes:void",
   "form": {
     "type": "imm_ptl:heterogeneous",

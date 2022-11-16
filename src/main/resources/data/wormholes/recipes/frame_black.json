@@ -1,6 +1,13 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "ingredients": [{"tag": "wormholes:frame"}, {"item": "minecraft:black_dye"}],
+  "ingredients": [
+    {
+      "tag": "wormholes:frame"
+    },
+    {
+      "item": "minecraft:black_dye"
+    }
+  ],
   "result": {
     "item": "wormholes:frame_black",
     "count": 1

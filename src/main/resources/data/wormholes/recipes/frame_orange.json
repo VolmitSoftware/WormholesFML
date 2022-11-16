@@ -1,6 +1,13 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "ingredients": [{"tag": "wormholes:frame"}, {"item": "minecraft:orange_dye"}],
+  "ingredients": [
+    {
+      "tag": "wormholes:frame"
+    },
+    {
+      "item": "minecraft:orange_dye"
+    }
+  ],
   "result": {
     "item": "wormholes:frame_orange",
     "count": 1
