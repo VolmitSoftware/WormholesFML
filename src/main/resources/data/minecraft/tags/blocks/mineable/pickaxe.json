@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "wormholes:frame",
+    "wormholes:frame_black",
+    "wormholes:frame_blue",
+    "wormholes:frame_brown",
+    "wormholes:frame_red",
+    "wormholes:frame_green",
+    "wormholes:frame_cyan",
+    "wormholes:frame_gray",
+    "wormholes:frame_light_blue",
+    "wormholes:frame_light_gray",
+    "wormholes:frame_lime",
+    "wormholes:frame_magenta",
+    "wormholes:frame_orange",
+    "wormholes:frame_pink",
+    "wormholes:frame_white",
+    "wormholes:frame_yellow"
+  ]
+}
