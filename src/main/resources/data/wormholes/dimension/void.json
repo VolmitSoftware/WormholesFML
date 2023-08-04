@@ -9,7 +9,7 @@
       "layers": [
         {
           "block": "minecraft:air",
-          "height": 1
+          "height": 64
         }
       ],
       "structure_overrides": []

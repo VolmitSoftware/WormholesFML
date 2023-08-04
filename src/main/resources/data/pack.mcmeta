@@ -1,0 +1,6 @@
+{
+    "pack": {
+        "description": "This adds support for Wormhole's Custom portal generation",
+        "pack_format": 9
+    }
+}

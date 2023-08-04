@@ -1,5 +1,8 @@
 package com.volmit.wormholes.content;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.ParseResults;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Either;
 import com.volmit.Wormholes;
 import com.volmit.wormholes.utils.Cuboid;
@@ -9,7 +12,7 @@ import com.volmit.wormholes.utils.SoundUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -33,6 +36,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import qouteall.imm_ptl.core.portal.Portal;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -48,9 +52,9 @@ public class ItemWand extends Item {
     @SubscribeEvent
     public static void onTooltipGather(RenderTooltipEvent.GatherComponents e) {
         if (e.getItemStack().getItem() instanceof ItemWand) {
-            e.getTooltipElements().add(Either.left(new TextComponent("§5Right-Click§7 to select/bind a frame")));
-            e.getTooltipElements().add(Either.left(new TextComponent("§5Sneak-Right-Click§7 to rotate the portal")));
-            e.getTooltipElements().add(Either.left(new TextComponent("§7§oRotates the portal §5180°§7,§o Based on Looking Direction")));
+            e.getTooltipElements().add(Either.left(Component.literal("§5Right-Click§7 to select/bind a frame")));
+            e.getTooltipElements().add(Either.left(Component.literal("§5Sneak-Right-Click§7 to rotate the portal")));
+            e.getTooltipElements().add(Either.left(Component.literal("§7§oRotates the portal §5180°§7,§o Based on Looking Direction")));
         }
     }
 
@@ -168,11 +172,25 @@ public class ItemWand extends Item {
 
                 if (yaw > 75 || yaw < -75) {
                     System.out.println("Rotating portal on the X axis");
-                    pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal rotate_portal_rotation_along x 180");
+                    
+                    CommandDispatcher<CommandSourceStack> commandDispatcher = pLevel.getServer().getCommands().getDispatcher();
+                    ParseResults<CommandSourceStack> parseResults = commandDispatcher.parse("/portal rotate_portal_rotation_along x 180", new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer));
+                    try {
+                        commandDispatcher.execute(parseResults);
+                    } catch (CommandSyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
+
                     SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.CHEST_CLOSE, 1f, 3.25f);
                 } else {
                     System.out.println("Rotating portal on the Z axis");
-                    pLevel.getServer().getCommands().performCommand(new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer), "/portal rotate_portal_rotation_along y 180");
+                    CommandDispatcher<CommandSourceStack> commandDispatcher = pLevel.getServer().getCommands().getDispatcher();
+                    ParseResults<CommandSourceStack> parseResults = commandDispatcher.parse("/portal rotate_portal_rotation_along y 180", new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer));
+                    try {
+                        commandDispatcher.execute(parseResults);
+                    } catch (CommandSyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
                     SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.CHEST_CLOSE, 1f, 3.25f);
                 }
             }
@@ -197,7 +215,7 @@ public class ItemWand extends Item {
 
         pContext.getPlayer().getCooldowns().addCooldown(this, 5);
         if (pContext.getPlayer().isCrouching()) {
-            pContext.getPlayer().displayClientMessage(new TextComponent("Hole Applicator Cleared."), true);
+            pContext.getPlayer().displayClientMessage(Component.literal("Hole Applicator Cleared."), true);
             clear(pContext.getItemInHand());
             SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.AMETHYST_BLOCK_BREAK, 1f, 0.5f);
             SoundUtil.play((ServerLevel) pContext.getLevel(), pContext.getPlayer().position(), SoundEvents.DEEPSLATE_BREAK, 1f, 0.8f);
@@ -215,7 +233,7 @@ public class ItemWand extends Item {
                 if (hasData(pContext.getItemInHand())) {
                     if (PortalUtil.linkPortals(pContext.getPlayer(), (ServerLevel) pContext.getLevel(), getDirection(pContext.getItemInHand()), getDimension(pContext.getItemInHand()),
                             getCuboid(pContext.getItemInHand()), computeDirection(playerPos, c.getCenter(), c), pContext.getLevel().dimension().location().toString(), c.clone())) {
-                        pContext.getPlayer().displayClientMessage(new TextComponent("Gateway Created!"), true);
+                        pContext.getPlayer().displayClientMessage(Component.literal("Gateway Created!"), true);
 
                         clear(pContext.getItemInHand());
                         if (!pContext.getPlayer().isCreative()) {
@@ -231,7 +249,7 @@ public class ItemWand extends Item {
                     return super.useOn(pContext);
                 }
 
-                pContext.getPlayer().displayClientMessage(new TextComponent("First Portal Frame Bound!"), true);
+                pContext.getPlayer().displayClientMessage(Component.literal("First Portal Frame Bound!"), true);
                 setCuboid(pContext.getItemInHand(), c);
                 setDimension(pContext.getItemInHand(), pContext.getLevel().dimension().location().toString());
                 setDirection(pContext.getItemInHand(), computeDirection(playerPos, c.getCenter(), c));

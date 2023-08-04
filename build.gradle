@@ -26,7 +26,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
 
-    mappings channel: 'parchment', version: "${project.mapping_version}-${project.minecraft_version}"
+    mappings channel: 'parchment', version: "${project.mapping_version}-${minecraft_version_full}"
     runs {
         client {
             workingDirectory project.file('run')
@@ -94,15 +94,18 @@ repositories {
     flatDir {
         dir 'libs'
     }
+    maven {
+        url "https://cursemaven.com"
+        content { includeGroup "curse.maven" }
+    }
 }
 
 dependencies {
     // Provided or Classpath
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    minecraft 'net.minecraftforge:forge:1.18.2-40.1.84'
-    implementation fg.deobf('qouteall.q_misc_util:immersive-portals:1.4.12')
-
+    compileOnly "org.projectlombok:lombok:${project.lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+    minecraft "net.minecraftforge:forge:${project.minecraft_version_full}-${project.forge_version}"
+    implementation fg.deobf("curse.maven:immersive-portals-for-forge-355440:4477626")
 }
 
 jar {
@@ -120,19 +123,6 @@ jar {
 }
 
 jar.finalizedBy('reobfJar')
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
-    }
-}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
