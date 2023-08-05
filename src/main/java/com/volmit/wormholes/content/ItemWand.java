@@ -172,25 +172,29 @@ public class ItemWand extends Item {
 
                 if (yaw > 75 || yaw < -75) {
                     System.out.println("Rotating portal on the X axis");
+                    //TODO Make an actual Method call to flip the portal
                     
-                    CommandDispatcher<CommandSourceStack> commandDispatcher = pLevel.getServer().getCommands().getDispatcher();
-                    ParseResults<CommandSourceStack> parseResults = commandDispatcher.parse("/portal rotate_portal_rotation_along x 180", new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer));
-                    try {
-                        commandDispatcher.execute(parseResults);
-                    } catch (CommandSyntaxException e) {
-                        throw new RuntimeException(e);
-                    }
+//                    CommandDispatcher<CommandSourceStack> commandDispatcher = pLevel.getServer().getCommands().getDispatcher();
+//                    ParseResults<CommandSourceStack> parseResults = commandDispatcher.parse("/portal rotate_portal_rotation_along x 180", new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer));
+//                    try {
+//                        commandDispatcher.execute(parseResults);
+//                    } catch (CommandSyntaxException e) {
+//                        throw new RuntimeException(e);
+//                    }
 
                     SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.CHEST_CLOSE, 1f, 3.25f);
                 } else {
                     System.out.println("Rotating portal on the Z axis");
-                    CommandDispatcher<CommandSourceStack> commandDispatcher = pLevel.getServer().getCommands().getDispatcher();
-                    ParseResults<CommandSourceStack> parseResults = commandDispatcher.parse("/portal rotate_portal_rotation_along y 180", new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer));
-                    try {
-                        commandDispatcher.execute(parseResults);
-                    } catch (CommandSyntaxException e) {
-                        throw new RuntimeException(e);
-                    }
+                    //TODO Make an actual Method call to flip the portal
+
+                    
+//                    CommandDispatcher<CommandSourceStack> commandDispatcher = pLevel.getServer().getCommands().getDispatcher();
+//                    ParseResults<CommandSourceStack> parseResults = commandDispatcher.parse("/portal rotate_portal_rotation_along y 180", new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer));
+//                    try {
+//                        commandDispatcher.execute(parseResults);
+//                    } catch (CommandSyntaxException e) {
+//                        throw new RuntimeException(e);
+//                    }
                     SoundUtil.play((ServerLevel) pPlayer.getLevel(), pPlayer.position(), SoundEvents.CHEST_CLOSE, 1f, 3.25f);
                 }
             }
