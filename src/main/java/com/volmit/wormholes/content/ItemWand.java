@@ -187,7 +187,7 @@ public class ItemWand extends Item {
                     System.out.println("Rotating portal on the Z axis");
                     //TODO Make an actual Method call to flip the portal
 
-                    
+
 //                    CommandDispatcher<CommandSourceStack> commandDispatcher = pLevel.getServer().getCommands().getDispatcher();
 //                    ParseResults<CommandSourceStack> parseResults = commandDispatcher.parse("/portal rotate_portal_rotation_along y 180", new CommandSourceStack(pPlayer, pPlayer.getEyePosition(), pPlayer.getRotationVector(), (ServerLevel) pPlayer.getLevel(), 4, "Wormhole", pPlayer.getDisplayName(), pPlayer.getLevel().getServer(), pPlayer));
 //                    try {
